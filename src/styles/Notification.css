@@ -1,0 +1,32 @@
+.notification-toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    padding: 1rem 1.5rem;
+    border-radius: 100px !important;
+    min-width: 300px;
+    max-width: 90vw;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.notification-toast.success {
+    border-left: 3px solid #10b981;
+}
+
+.notification-toast.error {
+    border-left: 3px solid #ef4444;
+}
+
+.notification-toast.info {
+    border-left: 3px solid #3b82f6;
+}

@@ -1,0 +1,784 @@
+{
+  "reviews": [
+    {
+      "id": "1",
+      "gameId": 113112,
+      "user": "Gamer123",
+      "rating": 5,
+      "comment": "Increíble juego, de los mejores que he probado."
+    }
+  ],
+  "users": [
+    {
+      "id": "c4cc",
+      "email": "carlosclaverosanchez@gmail.com",
+      "password": "Messi-10",
+      "username": "Carlos Gamer",
+      "joinedDate": "2026-02-12T13:11:22.578Z",
+      "profilePic": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAdVBMVEX///8BAQEAAABsbGzDw8P4+Pj7+/ssLCwGBgbGxsZPT0/T09P19fW7u7ttbW3v7+9zc3MeHh6ysrKkpKSLi4usrKzd3d3MzMzk5OQ1NTWFhYVYWFgyMjKbm5uSkpI9PT0QEBBCQkIgICBAQEAoKChkZGR9fX3dlvCIAAAEk0lEQVR4nO2diW6jMBCGzbRxSEgKobnvHtv3f8S1IQlHgUJh5bH3/6RWDWql+TrGFzYWAgAAAAAAAAAAAAAAAAAAoIRMv8nsg3ME58OCiBaHc2A6lH9CfKSMY+xcGoOd8vLuqJ93gVuKr0ovE/Q83yd6NR3UcEixLwnqD0RfpgMbCCnFMl9Cc0X1bDq2YZDimTy/0pAmpoMbhllVAm+KM9PBDcKyzlAp7l2oUMPKmzARVBVqaDq8AVjVplBLrkyHNwDTUkNRLKZT0+H1Ro6IqirSh+LIdIS9WTcVUmW4Nh1gbyY/GNrfJD43Gnr0bDrA3rhvGPxQSjemA+zNtrbBTw23pgPsz7WxtbiaDm8AokbDyHR4AzBp6NG40FgojjU3Ivk+7RwYWggxr69qKHZh9CRV37tu+GR/vzslrO58OzI6FDqJQUWbqMZU5MjUt1R32kZXm6X5RN2dceAmvLNWFapfTODY/nFThk7VKXlekTWEjsyV5glPu8eDmd3JkTqmzDo+Ry/ROXapfBaR334A3LmnStZhNLqBCF6jw2Vcw/EyjU5WN/ubF2pDZOdMhhTxOGsBG9C/NI5Nh/sLgrc2eg/Ji3WFNXmk1tpQjzOWpkPuxKx2SFjnqBSnFj3CCC/d/DS+RxdrunKzXccMpuXZp50tD73fOgumy0/0rIYVnYCv/EiwmyXtTQffhg391lBLWjB/Ksft28EKwyP/Yvraw0/XNuxXu8n3PhlUreKCe6s473ETpjNUc9MKPzDtZejxnwevmd7uIMh9InzepyK9OfIupvu+fh73Vv8wgOHBtEQj7wMYLkxLNJLdhUSt5jDS38yPlYlMSzQhH07JsL1hVWIev/i/IM4dt1F+T8VHELdKIlEcfOSTz7lXk1/Srddztal4SFctz/ndJjYZvrTK4ZNFhqOS4VOrHMKQEzCEIQzNA0MYwtA8MIQhDM0DQxjC0DwwhCEMzQNDGMLQPDCEIQzNA0MYwtA8bQzLlxwz9B03JL9iGZFThnp9rCy/RMIxQ70q7+C0oZIpL7Kxy7CwYmjy/T5sY+ixfiFmeU3Utxy+iGrt7DU95LHOYa6UUm0prTbM/SHntYkin8N1B8P1fYm/blBMSzQS0SPuhexgKD4fuxiSj3xZp6tmdbt+El0MY2VI6UfmO4LTbU8+pevR2xuKP/f/DfuXnszTntky2SvZwVCck7/zLXg31ig+L1e3dwW2N5RShKvleT7jL1igSw7tBIYw5A8MYcgfGMKQPzCEIX9gCEP+wBCG/IEhDPkDQxjyB4Yw5A8MYcgfGMKQPzCEIX9gCEP+wBCG/IEhDPkDQxjy578zpCrDdCONrSzLMl9Cn7RTusj7RfrNlI5KIFoJvbWilNiV6TB/jZSl4y6I9Br+sLjFMr1oJ1KfBpEz9ClK9hrsi9qR6Th7McrOQFRa1/T4kdn4/sZ9fa7MIrRrh0WZ7UKfIeClp47dT8ndXm+nXun9NfaW0QQpwun9MM63bXbxkOwAUl9TywWT224TvauyGE0K5wFvos/bRYex+/YDAAAAAAAAAAAAAAAAAMDg/AU1LTzQsEFougAAAABJRU5ErkJggg=="
+    }
+  ],
+  "genres": [
+    {
+      "id": "12",
+      "name": "Role-playing (RPG)"
+    },
+    {
+      "id": "31",
+      "name": "Adventure"
+    },
+    {
+      "id": "5",
+      "name": "Shooter"
+    },
+    {
+      "id": "25",
+      "name": "Hack and slash/Beat 'em up"
+    },
+    {
+      "id": "8",
+      "name": "Platform"
+    },
+    {
+      "id": "9",
+      "name": "Puzzle"
+    },
+    {
+      "id": "10",
+      "name": "Racing"
+    },
+    {
+      "id": "14",
+      "name": "Sport"
+    },
+    {
+      "id": "15",
+      "name": "Strategy"
+    }
+  ],
+  "platforms": [
+    {
+      "id": "6",
+      "name": "PC (Microsoft Windows)"
+    },
+    {
+      "id": "48",
+      "name": "PlayStation 4"
+    },
+    {
+      "id": "130",
+      "name": "Nintendo Switch"
+    },
+    {
+      "id": "167",
+      "name": "PlayStation 5"
+    },
+    {
+      "id": "169",
+      "name": "Xbox Series X|S"
+    }
+  ],
+  "games": [
+    {
+      "id": "113112",
+      "name": "The Legend of Zelda: Tears of the Kingdom",
+      "cover": {
+        "url": "//images.igdb.com/igdb/image/upload/t_thumb/co5v78.jpg"
+      },
+      "total_rating": 96,
+      "summary": "The Legend of Zelda: Tears of the Kingdom is the sequel to The Legend of Zelda: Breath of the Wild. The setting for Link’s adventure has been expanded to include the skies above the vast lands of Hyrule.",
+      "first_release_date": 1683849600,
+      "platforms": [
+        {
+          "id": 130,
+          "name": "Nintendo Switch"
+        }
+      ],
+      "genres": [
+        {
+          "id": 12,
+          "name": "Role-playing (RPG)"
+        },
+        {
+          "id": 31,
+          "name": "Adventure"
+        }
+      ],
+      "screenshots": [
+        {
+          "url": "//images.igdb.com/igdb/image/upload/t_thumb/sc89v0.jpg"
+        }
+      ]
+    },
+    {
+      "id": "119133",
+      "name": "Elden Ring",
+      "cover": {
+        "url": "//images.igdb.com/igdb/image/upload/t_thumb/co4jni.jpg"
+      },
+      "total_rating": 95,
+      "summary": "Rise, Tarnished, and be guided by grace to brandish the power of the Elden Ring and become an Elden Lord in the Lands Between.",
+      "first_release_date": 1645747200,
+      "platforms": [
+        {
+          "id": 48,
+          "name": "PlayStation 4"
+        },
+        {
+          "id": 167,
+          "name": "PlayStation 5"
+        },
+        {
+          "id": 6,
+          "name": "PC (Microsoft Windows)"
+        },
+        {
+          "id": 169,
+          "name": "Xbox Series X|S"
+        }
+      ],
+      "genres": [
+        {
+          "id": 12,
+          "name": "Role-playing (RPG)"
+        },
+        {
+          "id": 31,
+          "name": "Adventure"
+        }
+      ]
+    },
+    {
+      "id": "134633",
+      "name": "Black Myth: Wukong",
+      "cover": {
+        "url": "//images.igdb.com/igdb/image/upload/t_thumb/co8h8t.jpg"
+      },
+      "total_rating": 82,
+      "summary": "Black Myth: Wukong is an action RPG rooted in Chinese mythology. The story is based on Journey to the West, one of the Four Great Classical Novels of Chinese literature.",
+      "first_release_date": 1724112000,
+      "platforms": [
+        {
+          "id": 167,
+          "name": "PlayStation 5"
+        },
+        {
+          "id": 6,
+          "name": "PC (Microsoft Windows)"
+        }
+      ],
+      "genres": [
+        {
+          "id": 25,
+          "name": "Hack and slash/Beat 'em up"
+        },
+        {
+          "id": 12,
+          "name": "Role-playing (RPG)"
+        }
+      ]
+    },
+    {
+      "id": "1020",
+      "name": "Grand Theft Auto V",
+      "cover": {
+        "url": "//images.igdb.com/igdb/image/upload/t_thumb/co5um5.jpg"
+      },
+      "total_rating": 91,
+      "summary": "Grand Theft Auto V is an action-adventure game played from either a third-person or first-person perspective. Players complete missions—linear scenarios with set objectives—to progress through the story.",
+      "first_release_date": 1379376000,
+      "platforms": [
+        {
+          "id": 6,
+          "name": "PC (Microsoft Windows)"
+        },
+        {
+          "id": 48,
+          "name": "PlayStation 4"
+        },
+        {
+          "id": 167,
+          "name": "PlayStation 5"
+        }
+      ],
+      "genres": [
+        {
+          "id": 5,
+          "name": "Shooter"
+        },
+        {
+          "id": 31,
+          "name": "Adventure"
+        }
+      ]
+    },
+    {
+      "id": "3498",
+      "name": "Grand Theft Auto VI",
+      "cover": {
+        "url": "//images.igdb.com/igdb/image/upload/t_thumb/co7g4f.jpg"
+      },
+      "total_rating": 99,
+      "summary": "Grand Theft Auto VI heads to the state of Leonida, home to the neon-soaked streets of Vice City and beyond in the biggest, most immersive evolution of the Grand Theft Auto series yet.",
+      "first_release_date": 1761868800,
+      "platforms": [
+        {
+          "id": 167,
+          "name": "PlayStation 5"
+        },
+        {
+          "id": 169,
+          "name": "Xbox Series X|S"
+        }
+      ],
+      "genres": [
+        {
+          "id": 31,
+          "name": "Adventure"
+        },
+        {
+          "id": 5,
+          "name": "Shooter"
+        }
+      ]
+    },
+    {
+      "id": "119171",
+      "name": "Baldur's Gate 3",
+      "cover": {
+        "url": "//images.igdb.com/igdb/image/upload/t_thumb/co670h.jpg"
+      },
+      "total_rating": 96,
+      "summary": "Abducted, infected, lost. You are turning into a monster, but as the corruption inside you grows, so does your power. Forge a tale of fellowship and betrayal, sacrifice and survival, and the lure of absolute power.",
+      "first_release_date": 1691107200,
+      "platforms": [
+        {
+          "id": 6,
+          "name": "PC (Microsoft Windows)"
+        },
+        {
+          "id": 167,
+          "name": "PlayStation 5"
+        },
+        {
+          "id": 169,
+          "name": "Xbox Series X|S"
+        }
+      ],
+      "genres": [
+        {
+          "id": 12,
+          "name": "Role-playing (RPG)"
+        },
+        {
+          "id": 15,
+          "name": "Strategy"
+        }
+      ]
+    },
+    {
+      "id": "154817",
+      "name": "Marvel's Spider-Man 2",
+      "cover": {
+        "url": "//images.igdb.com/igdb/image/upload/t_thumb/co6lml.jpg"
+      },
+      "total_rating": 91,
+      "summary": "Spider-Men Peter Parker and Miles Morales face the ultimate test of strength inside and outside the mask as they fight to save the city, each other and the ones they love, from the monstrous Venom and the dangerous new symbiont threat.",
+      "first_release_date": 1697760000,
+      "platforms": [
+        {
+          "id": 167,
+          "name": "PlayStation 5"
+        }
+      ],
+      "genres": [
+        {
+          "id": 31,
+          "name": "Adventure"
+        },
+        {
+          "id": 25,
+          "name": "Hack and slash/Beat 'em up"
+        }
+      ]
+    },
+    {
+      "id": "112875",
+      "name": "God of War Ragnarök",
+      "cover": {
+        "url": "//images.igdb.com/igdb/image/upload/t_thumb/co5s76.jpg"
+      },
+      "total_rating": 94,
+      "summary": "Kratos and Atreus must journey to each of the Nine Realms in search of answers as Asgardian forces prepare for a prophesied battle that will end the world.",
+      "first_release_date": 1667952000,
+      "platforms": [
+        {
+          "id": 48,
+          "name": "PlayStation 4"
+        },
+        {
+          "id": 167,
+          "name": "PlayStation 5"
+        }
+      ],
+      "genres": [
+        {
+          "id": 31,
+          "name": "Adventure"
+        },
+        {
+          "id": 25,
+          "name": "Hack and slash/Beat 'em up"
+        }
+      ]
+    },
+    {
+      "id": "25076",
+      "name": "Red Dead Redemption 2",
+      "cover": {
+        "url": "//images.igdb.com/igdb/image/upload/t_thumb/co1q1f.jpg"
+      },
+      "total_rating": 97,
+      "summary": "America, 1899. Arthur Morgan and the Van der Linde gang are outlaws on the run. With federal agents and the best bounty hunters in the nation massing on their heels, the gang must rob, steal and fight their way across the rugged heartland of America in order to survive.",
+      "first_release_date": 1540512000,
+      "platforms": [
+        {
+          "id": 6,
+          "name": "PC (Microsoft Windows)"
+        },
+        {
+          "id": 48,
+          "name": "PlayStation 4"
+        },
+        {
+          "id": 49,
+          "name": "Xbox One"
+        }
+      ],
+      "genres": [
+        {
+          "id": 31,
+          "name": "Adventure"
+        },
+        {
+          "id": 12,
+          "name": "Role-playing (RPG)"
+        }
+      ]
+    },
+    {
+      "id": "1942",
+      "name": "The Witcher 3: Wild Hunt",
+      "cover": {
+        "url": "//images.igdb.com/igdb/image/upload/t_thumb/co1wyy.jpg"
+      },
+      "total_rating": 95,
+      "summary": "The Witcher: Wild Hunt is a story-driven, next-generation open world role-playing game set in a visually stunning fantasy universe full of meaningful choices and impactful consequences.",
+      "first_release_date": 1431993600,
+      "platforms": [
+        {
+          "id": 6,
+          "name": "PC (Microsoft Windows)"
+        },
+        {
+          "id": 48,
+          "name": "PlayStation 4"
+        },
+        {
+          "id": 167,
+          "name": "PlayStation 5"
+        },
+        {
+          "id": 130,
+          "name": "Nintendo Switch"
+        }
+      ],
+      "genres": [
+        {
+          "id": 12,
+          "name": "Role-playing (RPG)"
+        },
+        {
+          "id": 31,
+          "name": "Adventure"
+        }
+      ]
+    },
+    {
+      "id": "250766",
+      "name": "Astro Bot",
+      "cover": {
+        "url": "//images.igdb.com/igdb/image/upload/t_thumb/co89on.jpg"
+      },
+      "total_rating": 94,
+      "summary": "The PS5 mother ship has been destroyed, leaving ASTRO and the bot crew scattered all over the galaxies. Time to ride your trusty DualSense Speeder across more than 50 planets full of fun, danger and surprises.",
+      "first_release_date": 1725580800,
+      "platforms": [
+        {
+          "id": 167,
+          "name": "PlayStation 5"
+        }
+      ],
+      "genres": [
+        {
+          "id": 8,
+          "name": "Platform"
+        }
+      ]
+    },
+    {
+      "id": "1009",
+      "name": "The Last of Us Part I",
+      "cover": {
+        "url": "//images.igdb.com/igdb/image/upload/t_thumb/co596v.jpg"
+      },
+      "total_rating": 89,
+      "summary": "In a ravaged civilization, where infected and hardened survivors run rampant, Joel, a weary protagonist, is hired to smuggle 14-year-old Ellie out of a military quarantine zone.",
+      "first_release_date": 1662076800,
+      "platforms": [
+        {
+          "id": 167,
+          "name": "PlayStation 5"
+        },
+        {
+          "id": 6,
+          "name": "PC (Microsoft Windows)"
+        }
+      ],
+      "genres": [
+        {
+          "id": 31,
+          "name": "Adventure"
+        },
+        {
+          "id": 5,
+          "name": "Shooter"
+        }
+      ]
+    },
+    {
+      "id": "1074",
+      "name": "Super Mario Odyssey",
+      "cover": {
+        "url": "//images.igdb.com/igdb/image/upload/t_thumb/co1m71.jpg"
+      },
+      "total_rating": 92,
+      "summary": "Explore incredible places far from the Mushroom Kingdom as you join Mario and his new ally Cappy on a massive, globe-trotting 3D adventure.",
+      "first_release_date": 1509062400,
+      "platforms": [
+        {
+          "id": 130,
+          "name": "Nintendo Switch"
+        }
+      ],
+      "genres": [
+        {
+          "id": 8,
+          "name": "Platform"
+        },
+        {
+          "id": 31,
+          "name": "Adventure"
+        }
+      ]
+    },
+    {
+      "id": "26192",
+      "name": "Hades",
+      "cover": {
+        "url": "//images.igdb.com/igdb/image/upload/t_thumb/co28sd.jpg"
+      },
+      "total_rating": 90,
+      "summary": "Hades is a god-like rogue-like dungeon crawler that combines the best aspects of Supergiant's acclaimed titles, including the fast-paced action of Bastion, the rich atmosphere and depth of Transistor, and the character-driven storytelling of Pyre.",
+      "first_release_date": 1600300800,
+      "platforms": [
+        {
+          "id": 6,
+          "name": "PC (Microsoft Windows)"
+        },
+        {
+          "id": 130,
+          "name": "Nintendo Switch"
+        },
+        {
+          "id": 167,
+          "name": "PlayStation 5"
+        }
+      ],
+      "genres": [
+        {
+          "id": 25,
+          "name": "Hack and slash/Beat 'em up"
+        },
+        {
+          "id": 12,
+          "name": "Role-playing (RPG)"
+        }
+      ]
+    },
+    {
+      "id": "232534",
+      "name": "Dragon Age: The Veilguard",
+      "cover": {
+        "url": "//images.igdb.com/igdb/image/upload/t_thumb/co89v0.jpg"
+      },
+      "total_rating": 84,
+      "summary": "Enter the world of Thedas, a vibrant land of rugged wilderness, treacherous labyrinths, and glittering cities steeped in conflict and secret magics. Now, two corrupt ancient gods have broken free from centuries of darkness and are hell-bent on destroying the world.",
+      "first_release_date": 1730332800,
+      "platforms": [
+        {
+          "id": 167,
+          "name": "PlayStation 5"
+        },
+        {
+          "id": 6,
+          "name": "PC (Microsoft Windows)"
+        },
+        {
+          "id": 169,
+          "name": "Xbox Series X|S"
+        }
+      ],
+      "genres": [
+        {
+          "id": 12,
+          "name": "Role-playing (RPG)"
+        },
+        {
+          "id": 31,
+          "name": "Adventure"
+        }
+      ]
+    },
+    {
+      "id": "1021",
+      "name": "Minecraft",
+      "cover": {
+        "url": "//images.igdb.com/igdb/image/upload/t_thumb/co49x3.jpg"
+      },
+      "total_rating": 93,
+      "summary": "Minecraft is a game about placing blocks and going on adventures. Explore infinitely generated worlds and build amazing things from the simplest of homes to the grandest of castles.",
+      "first_release_date": 1321574400,
+      "platforms": [
+        {
+          "id": 6,
+          "name": "PC (Microsoft Windows)"
+        },
+        {
+          "id": 48,
+          "name": "PlayStation 4"
+        },
+        {
+          "id": 130,
+          "name": "Nintendo Switch"
+        }
+      ],
+      "genres": [
+        {
+          "id": 31,
+          "name": "Adventure"
+        },
+        {
+          "id": 15,
+          "name": "Strategy"
+        }
+      ]
+    },
+    {
+      "id": "19560",
+      "name": "God of War",
+      "cover": {
+        "url": "//images.igdb.com/igdb/image/upload/t_thumb/co1tmu.jpg"
+      },
+      "total_rating": 94,
+      "summary": "Living as a man outside the shadow of the gods, Kratos must adapt to unfamiliar lands, unexpected threats, and a second chance at being a father.",
+      "first_release_date": 1524182400,
+      "platforms": [
+        {
+          "id": 167,
+          "name": "PlayStation 5"
+        },
+        {
+          "id": 48,
+          "name": "PlayStation 4"
+        },
+        {
+          "id": 6,
+          "name": "PC (Microsoft Windows)"
+        }
+      ],
+      "genres": [
+        {
+          "id": 12,
+          "name": "Role-playing (RPG)"
+        },
+        {
+          "id": 31,
+          "name": "Adventure"
+        },
+        {
+          "id": 25,
+          "name": "Hack and slash/Beat 'em up"
+        }
+      ]
+    },
+    {
+      "id": "1030",
+      "name": "Resident Evil 4",
+      "cover": {
+        "url": "//images.igdb.com/igdb/image/upload/t_thumb/co5v6b.jpg"
+      },
+      "total_rating": 92,
+      "summary": "Survival is just the beginning. Six years have passed since the biological disaster in Raccoon City. Leon S. Kennedy, one of the survivors, has been dispatched to rescue the president's kidnapped daughter.",
+      "first_release_date": 1679616000,
+      "platforms": [
+        {
+          "id": 167,
+          "name": "PlayStation 5"
+        },
+        {
+          "id": 6,
+          "name": "PC (Microsoft Windows)"
+        },
+        {
+          "id": 169,
+          "name": "Xbox Series X|S"
+        }
+      ],
+      "genres": [
+        {
+          "id": 31,
+          "name": "Adventure"
+        },
+        {
+          "id": 5,
+          "name": "Shooter"
+        }
+      ]
+    },
+    {
+      "id": "7331",
+      "name": "Horizon Zero Dawn",
+      "cover": {
+        "url": "//images.igdb.com/igdb/image/upload/t_thumb/co1r7h.jpg"
+      },
+      "total_rating": 89,
+      "summary": "In a lush, post-apocalyptic world where nature has reclaimed the ruins of a forgotten civilization, pockets of humanity live on in primitive hunter-gatherer tribes.",
+      "first_release_date": 1488240000,
+      "platforms": [
+        {
+          "id": 48,
+          "name": "PlayStation 4"
+        },
+        {
+          "id": 6,
+          "name": "PC (Microsoft Windows)"
+        }
+      ],
+      "genres": [
+        {
+          "id": 12,
+          "name": "Role-playing (RPG)"
+        },
+        {
+          "id": 31,
+          "name": "Adventure"
+        }
+      ]
+    },
+    {
+      "id": "43370",
+      "name": "Ghost of Tsushima",
+      "cover": {
+        "url": "//images.igdb.com/igdb/image/upload/t_thumb/co27je.jpg"
+      },
+      "total_rating": 91,
+      "summary": "In the late 13th century, the Mongol empire has laid waste to entire nations along their campaign to conquer the East. Tsushima Island is all that stands between mainland Japan and a massive Mongol invasion fleet.",
+      "first_release_date": 1594944000,
+      "platforms": [
+        {
+          "id": 48,
+          "name": "PlayStation 4"
+        },
+        {
+          "id": 167,
+          "name": "PlayStation 5"
+        }
+      ],
+      "genres": [
+        {
+          "id": 31,
+          "name": "Adventure"
+        },
+        {
+          "id": 12,
+          "name": "Role-playing (RPG)"
+        }
+      ]
+    },
+    {
+      "id": "115",
+      "name": "Portal 2",
+      "cover": {
+        "url": "//images.igdb.com/igdb/image/upload/t_thumb/co2lfs.jpg"
+      },
+      "total_rating": 96,
+      "summary": "Portal 2 is the sequel to the title named 'Game of the Year' 2007 by over 30 publications around the world. Portal 2 promises to break new ground in next-generation gaming by expanding the award-winning recipe of innovative gameplay, immersive story, and creative inclusion of music.",
+      "first_release_date": 1303171200,
+      "platforms": [
+        {
+          "id": 6,
+          "name": "PC (Microsoft Windows)"
+        },
+        {
+          "id": 130,
+          "name": "Nintendo Switch"
+        }
+      ],
+      "genres": [
+        {
+          "id": 8,
+          "name": "Platform"
+        },
+        {
+          "id": 9,
+          "name": "Puzzle"
+        }
+      ]
+    },
+    {
+      "id": "2155",
+      "name": "Hollow Knight",
+      "cover": {
+        "url": "//images.igdb.com/igdb/image/upload/t_thumb/co1r9r.jpg"
+      },
+      "total_rating": 90,
+      "summary": "A classical 2D action-adventure across a vast interconnected world. Explore twisting caverns, ancient cities and deadly wastes; battle tainted creatures and befriend bizarre bugs; and solve ancient mysteries at the kingdom's heart.",
+      "first_release_date": 1487894400,
+      "platforms": [
+        {
+          "id": 6,
+          "name": "PC (Microsoft Windows)"
+        },
+        {
+          "id": 130,
+          "name": "Nintendo Switch"
+        },
+        {
+          "id": 48,
+          "name": "PlayStation 4"
+        }
+      ],
+      "genres": [
+        {
+          "id": 8,
+          "name": "Platform"
+        },
+        {
+          "id": 31,
+          "name": "Adventure"
+        }
+      ]
+    }
+  ]
+}
