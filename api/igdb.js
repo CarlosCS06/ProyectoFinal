@@ -1,4 +1,4 @@
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // Configurar CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -16,9 +16,15 @@ export default async function handler(req, res) {
     const endpoint = (req.query.endpoint || 'games').toString();
     const bodyText = typeof req.body === 'string' ? req.body : req.body || '';
 
+    console.log('API Call:', endpoint);
+    console.log('Client ID available:', !!process.env.IGDB_CLIENT_ID);
+    console.log('Client Secret available:', !!process.env.IGDB_CLIENT_SECRET);
+
     if (!process.env.IGDB_CLIENT_ID || !process.env.IGDB_CLIENT_SECRET) {
       return res.status(500).json({ 
-        error: 'Missing IGDB credentials in environment variables' 
+        error: 'Missing IGDB credentials in environment variables',
+        clientIdExists: !!process.env.IGDB_CLIENT_ID,
+        clientSecretExists: !!process.env.IGDB_CLIENT_SECRET
       });
     }
 
@@ -31,6 +37,7 @@ export default async function handler(req, res) {
     
     const tokenJson = await tokenResp.json();
     if (!tokenResp.ok) {
+      console.error('Token error:', tokenJson);
       return res.status(tokenResp.status).json({ 
         error: 'Token error', 
         details: tokenJson 
@@ -61,4 +68,4 @@ export default async function handler(req, res) {
       details: String(e?.message || e) 
     });
   }
-}
+};
