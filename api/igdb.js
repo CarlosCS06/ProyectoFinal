@@ -16,26 +16,26 @@ export default async function handler(req, res) {
     const endpoint = (req.query.endpoint || 'games').toString();
     const bodyText = typeof req.body === 'string' ? req.body : req.body || '';
 
-    const clientId = process.env.IGDB_CLIENT_ID;
-    const clientSecret = process.env.IGDB_CLIENT_SECRET;
+    const clientId = process.env.VITE_IGDB_CLIENT_ID;
+    const bearerToken = process.env.VITE_IGDB_BEARER_TOKEN;
 
     console.log('=== API DEBUG ===');
     console.log('Endpoint:', endpoint);
     console.log('Client ID:', clientId ? clientId.substring(0, 5) + '...' : 'MISSING');
-    console.log('Client Secret:', clientSecret ? clientSecret.substring(0, 5) + '...' : 'MISSING');
+    console.log('Bearer Token:', bearerToken ? bearerToken.substring(0, 5) + '...' : 'MISSING');
     console.log('Body length:', bodyText.length);
 
-    if (!clientId || !clientSecret) {
+    if (!clientId || !bearerToken) {
       console.error('MISSING CREDENTIALS!');
       return res.status(500).json({ 
         error: 'Missing IGDB credentials',
         hasClientId: !!clientId,
-        hasClientSecret: !!clientSecret
+        hasBearerToken: !!bearerToken
       });
     }
 
     // Obtener token de Twitch
-    const tokenUrl = `https://id.twitch.tv/oauth2/token?client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials`;
+    const tokenUrl = `https://id.twitch.tv/oauth2/token?client_id=${clientId}&client_secret=${bearerToken}&grant_type=client_credentials`;
     console.log('Requesting token from Twitch...');
     
     const tokenResp = await fetch(tokenUrl, { method: 'POST' });
