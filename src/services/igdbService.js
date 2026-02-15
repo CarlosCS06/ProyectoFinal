@@ -1,7 +1,9 @@
 const LOCAL_BASE_URL = 'http://localhost:3001';
 
 // En Vercel, usamos las funciones serverless; en desarrollo con proxy
-const API_URL = import.meta.env.PROD ? '/api/igdb' : '/igdb-api';
+const API_URL = typeof window !== 'undefined' && window.location.hostname !== 'localhost' 
+    ? '/api/igdb' 
+    : '/igdb-api';
 
 const fetchFromIGDB = async (endpoint, query) => {
     try {
