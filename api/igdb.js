@@ -16,8 +16,9 @@ export default async function handler(req, res) {
     const endpoint = (req.query.endpoint || 'games').toString();
     const bodyText = typeof req.body === 'string' ? req.body : req.body || '';
 
-    const clientId = process.env.VITE_IGDB_CLIENT_ID;
-    const bearerToken = process.env.VITE_IGDB_BEARER_TOKEN;
+    // Hardcode las credenciales como fallback si no vienen de env vars
+    const clientId = process.env.VITE_IGDB_CLIENT_ID || '8jdmsei3ftzoamlgrku1updly5umcj';
+    const bearerToken = process.env.VITE_IGDB_BEARER_TOKEN || 'q4jfm4jkc1902wzzxs30v5l8jtlj5d';
 
     console.log('=== API DEBUG ===');
     console.log('Endpoint:', endpoint);
