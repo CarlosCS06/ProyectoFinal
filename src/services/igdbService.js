@@ -1,16 +1,13 @@
-const CLIENT_ID = import.meta.env.VITE_IGDB_CLIENT_ID;
-const BEARER_TOKEN = import.meta.env.VITE_IGDB_BEARER_TOKEN;
-const IGDB_URL = '/igdb-api';
-
 const LOCAL_BASE_URL = 'http://localhost:3001';
+
+// En Vercel, usamos las funciones serverless; en desarrollo con proxy
+const API_URL = import.meta.env.PROD ? '/api/igdb' : '/igdb-api';
 
 const fetchFromIGDB = async (endpoint, query) => {
     try {
-        const response = await fetch(`${IGDB_URL}${endpoint}`, {
+        const response = await fetch(`${API_URL}${endpoint}`, {
             method: 'POST',
             headers: {
-                'Client-ID': CLIENT_ID,
-                'Authorization': `Bearer ${BEARER_TOKEN}`,
                 'Content-Type': 'text/plain',
             },
             body: query,

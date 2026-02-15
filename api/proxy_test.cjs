@@ -1,39 +1,33 @@
-const https = require('https');
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+const https = require("https");
 
-const CLIENT_ID = '8jdmsei3ftzoamlgrku1updly5umcj';
-const BEARER_TOKEN = 'q4jfm4jkc1902wzzxs30v5l8jtlj5d';
+const CLIENT_ID = process.env.IGDB_CLIENT_ID;
+const TOKEN = process.env.IGDB_BEARER_TOKEN;
+
+if (!CLIENT_ID || !TOKEN) {
+    console.error("Faltan variables: IGDB_CLIENT_ID y/o IGDB_BEARER_TOKEN");
+    process.exit(1);
+}
 
 const options = {
-    method: 'POST',
+    hostname: "api.igdb.com",
+    path: "/v4/games",
+    method: "POST",
     headers: {
-        'Client-ID': CLIENT_ID,
-        'Authorization': `Bearer ${BEARER_TOKEN}`,
-        'Content-Type': 'text/plain',
-        'Accept': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-    }
+        "Client-ID": CLIENT_ID,
+        "Authorization": `Bearer ${TOKEN}`,
+        "Content-Type": "text/plain",
+        "Accept": "application/json",
+    },
 };
-console.log('Using Token:', BEARER_TOKEN.substring(0, 5) + '...');
 
-const targetUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://httpbin.org/post');
-
-const req = https.request(targetUrl, options, (res) => {
-    console.log('Status Code:', res.statusCode);
-    console.log('Proxy Headers:', res.headers);
-    let data = '';
-    res.on('data', (chunk) => { data += chunk; });
-    res.on('end', () => {
-        console.log('IGDB Response:', data);
-        if (data.includes('Authorization Failure')) {
-            console.log('HINT: The headers might not be reaching IGDB. Checking AllOrigins docs...');
-        }
-    });
+const req = https.request(options, (res) => {
+    let data = "";
+    console.log("Status:", res.statusCode);
+    res.on("data", (chunk) => (data += chunk));
+    res.on("end", () => console.log("Body:", data));
 });
 
-req.on('error', (e) => {
-    console.error('Error:', e);
-});
+req.on("error", (e) => console.error("Error:", e));
 
-req.write('fields name; limit 5;');
+req.write("fields name,rating; limit 5;");
 req.end();
