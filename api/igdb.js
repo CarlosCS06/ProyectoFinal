@@ -16,26 +16,33 @@ export default async function handler(req, res) {
     const endpoint = (req.query.endpoint || 'games').toString();
     const bodyText = typeof req.body === 'string' ? req.body : req.body || '';
 
-    console.log('API Call:', endpoint);
-    console.log('Client ID available:', !!process.env.IGDB_CLIENT_ID);
-    console.log('Client Secret available:', !!process.env.IGDB_CLIENT_SECRET);
+    const clientId = process.env.IGDB_CLIENT_ID;
+    const clientSecret = process.env.IGDB_CLIENT_SECRET;
 
-    if (!process.env.IGDB_CLIENT_ID || !process.env.IGDB_CLIENT_SECRET) {
+    console.log('=== API DEBUG ===');
+    console.log('Endpoint:', endpoint);
+    console.log('Client ID:', clientId ? clientId.substring(0, 5) + '...' : 'MISSING');
+    console.log('Client Secret:', clientSecret ? clientSecret.substring(0, 5) + '...' : 'MISSING');
+    console.log('Body length:', bodyText.length);
+
+    if (!clientId || !clientSecret) {
+      console.error('MISSING CREDENTIALS!');
       return res.status(500).json({ 
-        error: 'Missing IGDB credentials in environment variables',
-        clientIdExists: !!process.env.IGDB_CLIENT_ID,
-        clientSecretExists: !!process.env.IGDB_CLIENT_SECRET
+        error: 'Missing IGDB credentials',
+        hasClientId: !!clientId,
+        hasClientSecret: !!clientSecret
       });
     }
 
     // Obtener token de Twitch
-    const tokenResp = await fetch(
-      `https://id.twitch.tv/oauth2/token?client_id=${process.env.IGDB_CLIENT_ID}` +
-      `&client_secret=${process.env.IGDB_CLIENT_SECRET}&grant_type=client_credentials`,
-      { method: 'POST' }
-    );
+    const tokenUrl = `https://id.twitch.tv/oauth2/token?client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials`;
+    console.log('Requesting token from Twitch...');
     
+    const tokenResp = await fetch(tokenUrl, { method: 'POST' });
     const tokenJson = await tokenResp.json();
+    
+    console.log('Token response status:', tokenResp.status);
+    
     if (!tokenResp.ok) {
       console.error('Token error:', tokenJson);
       return res.status(tokenResp.status).json({ 
@@ -45,12 +52,14 @@ export default async function handler(req, res) {
     }
 
     const accessToken = tokenJson.access_token;
+    console.log('Token obtained successfully');
 
     // Llamar a IGDB
+    console.log('Calling IGDB endpoint:', endpoint);
     const igdbResp = await fetch(`https://api.igdb.com/v4/${endpoint}`, {
       method: 'POST',
       headers: {
-        'Client-ID': process.env.IGDB_CLIENT_ID,
+        'Client-ID': clientId,
         'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'text/plain',
       },
@@ -59,16 +68,16 @@ export default async function handler(req, res) {
 
     const text = await igdbResp.text();
     console.log('IGDB Response Status:', igdbResp.status);
-    console.log('IGDB Response Text:', text);
     
     res.status(igdbResp.status);
     res.setHeader('Content-Type', 'application/json');
     return res.send(text);
   } catch (e) {
-    console.error('API Error:', e);
+    console.error('API Error:', e.message);
     return res.status(500).json({ 
       error: 'Server error', 
       details: String(e?.message || e) 
     });
   }
+}
 }
