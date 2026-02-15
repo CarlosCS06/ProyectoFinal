@@ -58,6 +58,9 @@ export default async function handler(req, res) {
     });
 
     const text = await igdbResp.text();
+    console.log('IGDB Response Status:', igdbResp.status);
+    console.log('IGDB Response Text:', text);
+    
     res.status(igdbResp.status);
     res.setHeader('Content-Type', 'application/json');
     return res.send(text);
