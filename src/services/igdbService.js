@@ -7,7 +7,12 @@ const API_URL = typeof window !== 'undefined' && window.location.hostname !== 'l
 
 const fetchFromIGDB = async (endpoint, query) => {
     try {
-        const response = await fetch(`${API_URL}${endpoint}`, {
+        // En Vercel, el endpoint va como query parameter
+        const url = API_URL === '/api/igdb' 
+            ? `${API_URL}?endpoint=${endpoint.replace('/', '')}`
+            : `${API_URL}${endpoint}`;
+
+        const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'text/plain',
