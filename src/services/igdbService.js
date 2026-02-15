@@ -5,6 +5,18 @@ const API_URL = typeof window !== 'undefined' && window.location.hostname !== 'l
     ? '/api/igdb' 
     : '/igdb-api';
 
+// Mock data para Vercel como fallback
+const mockGames = [
+  { id: 1, name: 'Elden Ring', cover: { url: '//images.igdb.com/igdb/image/upload/t_cover_big/co2n7k.jpg' }, total_rating: 96, first_release_date: 1646092800, platforms: [{ name: 'PC' }], genres: [{ name: 'RPG' }] },
+  { id: 2, name: 'Baldur\'s Gate 3', cover: { url: '//images.igdb.com/igdb/image/upload/t_cover_big/co5mof.jpg' }, total_rating: 96, first_release_date: 1691539200, platforms: [{ name: 'PC' }], genres: [{ name: 'RPG' }] },
+  { id: 3, name: 'Starfield', cover: { url: '//images.igdb.com/igdb/image/upload/t_cover_big/co68qn.jpg' }, total_rating: 83, first_release_date: 1694995200, platforms: [{ name: 'Xbox Series X|S' }], genres: [{ name: 'RPG' }] },
+  { id: 4, name: 'Final Fantasy XVI', cover: { url: '//images.igdb.com/igdb/image/upload/t_cover_big/co5sfb.jpg' }, total_rating: 87, first_release_date: 1687305600, platforms: [{ name: 'PlayStation 5' }], genres: [{ name: 'RPG' }] },
+  { id: 5, name: 'Hogwarts Legacy', cover: { url: '//images.igdb.com/igdb/image/upload/t_cover_big/co5vqs.jpg' }, total_rating: 81, first_release_date: 1675382400, platforms: [{ name: 'PC' }, { name: 'PlayStation 5' }], genres: [{ name: 'RPG' }] },
+  { id: 6, name: 'Cyberpunk 2077', cover: { url: '//images.igdb.com/igdb/image/upload/t_cover_big/co2z2a.jpg' }, total_rating: 77, first_release_date: 1607644800, platforms: [{ name: 'PC' }], genres: [{ name: 'RPG' }] },
+];
+
+const isProduction = typeof window !== 'undefined' && window.location.hostname !== 'localhost';
+
 const fetchFromIGDB = async (endpoint, query) => {
     try {
         // En Vercel, el endpoint va como query parameter
@@ -23,7 +35,12 @@ const fetchFromIGDB = async (endpoint, query) => {
         if (!response.ok) throw new Error(`Status ${response.status}`);
         return await response.json();
     } catch (error) {
-        // Solo usamos el respaldo local como última opción silenciosa ante fallos de red
+        console.log('IGDB fetch failed, using mock data');
+        // En Vercel, usar mock data como fallback
+        if (isProduction) {
+            return mockGames;
+        }
+        // Solo usamos el respaldo local en desarrollo ante fallos de red
         return await handleLocalFallback(endpoint, query);
     }
 };
