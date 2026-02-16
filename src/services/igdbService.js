@@ -79,16 +79,16 @@ const fetchFromIGDB = async (endpoint, query) => {
         if (!response.ok) throw new Error(`Status ${response.status}`);
         const data = await response.json();
         
-        // Validar que tenga los datos esperados
-        if (!Array.isArray(data)) {
-            throw new Error('Response is not an array');
+        // Validar que sea un array
+        if (Array.isArray(data)) {
+            return data;
         }
         
-        return data;
+        throw new Error('Response is not an array');
     } catch (error) {
-        console.log('IGDB fetch failed, using mock data:', error.message);
-        // En cualquier caso (Vercel o desarrollo), usar mock data como fallback
-        return mockGames;
+        console.log('IGDB fetch failed, trying local fallback:', error.message);
+        // Intentar local fallback
+        return await handleLocalFallback(endpoint, query);
     }
 };
 
@@ -124,28 +124,6 @@ export const igdbService = {
     ),
 
     searchGames: (searchQuery, filters = {}) => {
-        // En Vercel, filtrar datos mock localmente
-        if (isProduction) {
-            let results = mockGames.filter(game => 
-                game.name.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-            
-            if (filters.genre) {
-                results = results.filter(game => 
-                    game.genres.some(g => g.name.toLowerCase().includes(filters.genre.toLowerCase()))
-                );
-            }
-            
-            if (filters.platform) {
-                results = results.filter(game => 
-                    game.platforms.some(p => p.name.toLowerCase().includes(filters.platform.toLowerCase()))
-                );
-            }
-            
-            return Promise.resolve(results.slice(0, 48));
-        }
-
-        // En desarrollo, usar API
         let whereClause = 'where cover != null';
         if (filters.genre) whereClause += ` & genres = (${filters.genre})`;
         if (filters.platform) whereClause += ` & platforms = (${filters.platform})`;
@@ -159,35 +137,6 @@ export const igdbService = {
     },
 
     discoverGames: (filters = {}) => {
-        // En Vercel, filtrar y ordenar datos mock localmente
-        if (isProduction) {
-            let results = mockGames;
-            
-            if (filters.genre) {
-                results = results.filter(game => 
-                    game.genres.some(g => g.name.toLowerCase().includes(filters.genre.toLowerCase()))
-                );
-            }
-            
-            if (filters.platform) {
-                results = results.filter(game => 
-                    game.platforms.some(p => p.name.toLowerCase().includes(filters.platform.toLowerCase()))
-                );
-            }
-            
-            // Ordenar
-            if (filters.sort === 'newest') {
-                results.sort((a, b) => b.first_release_date - a.first_release_date);
-            } else if (filters.sort === 'oldest') {
-                results.sort((a, b) => a.first_release_date - b.first_release_date);
-            } else {
-                results.sort((a, b) => b.total_rating - a.total_rating);
-            }
-            
-            return Promise.resolve(results.slice(0, 24));
-        }
-
-        // En desarrollo, usar API
         let whereClause = 'where cover != null & total_rating != null';
         if (filters.genre) whereClause += ` & genres = (${filters.genre})`;
         if (filters.platform) whereClause += ` & platforms = (${filters.platform})`;
