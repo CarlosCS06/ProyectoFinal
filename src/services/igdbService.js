@@ -77,15 +77,18 @@ const fetchFromIGDB = async (endpoint, query) => {
         });
 
         if (!response.ok) throw new Error(`Status ${response.status}`);
-        return await response.json();
-    } catch (error) {
-        console.log('IGDB fetch failed, using mock data');
-        // En Vercel, usar mock data como fallback
-        if (isProduction) {
-            return mockGames;
+        const data = await response.json();
+        
+        // Validar que tenga los datos esperados
+        if (!Array.isArray(data)) {
+            throw new Error('Response is not an array');
         }
-        // Solo usamos el respaldo local en desarrollo ante fallos de red
-        return await handleLocalFallback(endpoint, query);
+        
+        return data;
+    } catch (error) {
+        console.log('IGDB fetch failed, using mock data:', error.message);
+        // En cualquier caso (Vercel o desarrollo), usar mock data como fallback
+        return mockGames;
     }
 };
 
