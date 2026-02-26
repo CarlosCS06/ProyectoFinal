@@ -1,28 +1,29 @@
+
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { igdbService, formatIGDBImage } from '../services/igdbService';
+import { igdbService, formatearImagenIGDB } from '../services/igdbService';
 import { Trophy, Star, Filter, Calendar, LayoutGrid, List } from 'lucide-react';
 import GameGrid from '../components/games/GameGrid';
 import '../styles/Rankings.css';
 
 const Rankings = () => {
-    const [games, setGames] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [viewMode, setViewMode] = useState('grid'); // 'grid' o 'list'
+    const [juegos, setJuegos] = useState([]);
+    const [cargando, setCargando] = useState(true);
+    const [modoVista, setModoVista] = useState('grid');
 
     useEffect(() => {
-        const fetchRankings = async () => {
-            setLoading(true);
+        const obtenerRankings = async () => {
+            setCargando(true);
             try {
-                const data = await igdbService.getTopRankings(50);
-                setGames(data);
+                const datos = await igdbService.obtenerMejoresValorados(50);
+                setJuegos(datos);
             } catch (error) {
-                console.error("Error fetching rankings", error);
+                console.error("Error al obtener rankings", error);
             } finally {
-                setLoading(false);
+                setCargando(false);
             }
         };
-        fetchRankings();
+        obtenerRankings();
     }, []);
 
     return (
@@ -42,14 +43,14 @@ const Rankings = () => {
 
                 <div className="view-controls glass">
                     <button
-                        className={viewMode === 'grid' ? 'active' : ''}
-                        onClick={() => setViewMode('grid')}
+                        className={modoVista === 'grid' ? 'active' : ''}
+                        onClick={() => setModoVista('grid')}
                     >
                         <LayoutGrid size={18} />
                     </button>
                     <button
-                        className={viewMode === 'list' ? 'active' : ''}
-                        onClick={() => setViewMode('list')}
+                        className={modoVista === 'list' ? 'active' : ''}
+                        onClick={() => setModoVista('list')}
                     >
                         <List size={18} />
                     </button>
@@ -57,7 +58,7 @@ const Rankings = () => {
             </header>
 
             <AnimatePresence mode="wait">
-                {loading ? (
+                {cargando ? (
                     <motion.div
                         key="loader"
                         className="loading-container"
@@ -73,33 +74,33 @@ const Rankings = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                     >
-                        {viewMode === 'grid' ? (
-                            <GameGrid games={games} loading={false} />
+                        {modoVista === 'grid' ? (
+                            <GameGrid juegos={juegos} cargando={false} />
                         ) : (
                             <div className="rankings-list-view">
-                                {games.map((game, index) => (
+                                {juegos.map((juego, indice) => (
                                     <motion.div
-                                        key={game.id}
+                                        key={juego.id}
                                         className="rank-item glass"
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: index * 0.02 }}
+                                        transition={{ delay: indice * 0.02 }}
                                     >
-                                        <div className="rank-number">#{index + 1}</div>
+                                        <div className="rank-number">#{indice + 1}</div>
                                         <div className="rank-cover">
-                                            <img src={formatIGDBImage(game.cover?.url, 't_cover_small')} alt={game.name} />
+                                            <img src={formatearImagenIGDB(juego.portada?.url, 't_cover_small')} alt={juego.nombre} />
                                         </div>
                                         <div className="rank-info">
-                                            <h3>{game.name}</h3>
+                                            <h3>{juego.nombre}</h3>
                                             <div className="rank-meta">
-                                                <span>{game.genres?.[0]?.name}</span>
+                                                <span>{juego.generos?.[0]?.nombre}</span>
                                                 <span className="dot">•</span>
-                                                <span>{game.first_release_date ? new Date(game.first_release_date * 1000).getFullYear() : 'TBA'}</span>
+                                                <span>{juego.fecha_lanzamiento ? new Date(juego.fecha_lanzamiento * 1000).getFullYear() : 'TBA'}</span>
                                             </div>
                                         </div>
                                         <div className="rank-score">
                                             <Star size={16} fill="#fbbf24" color="#fbbf24" />
-                                            <span>{(game.total_rating / 20).toFixed(1)}</span>
+                                            <span>{juego.valoracion ? (juego.valoracion / 20).toFixed(1) : 'N/A'}</span>
                                         </div>
                                     </motion.div>
                                 ))}

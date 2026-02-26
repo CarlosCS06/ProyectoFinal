@@ -1,39 +1,39 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { igdbService, formatIGDBImage } from '../services/igdbService';
+import { igdbService, formatearImagenIGDB } from '../services/igdbService';
 import GameGrid from '../components/games/GameGrid';
 import { TrendingUp, Sparkles, Play, Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Home.css';
 
 const Home = () => {
-    const [trending, setTrending] = useState([]);
-    const [featured, setFeatured] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [tendencia, setTendencia] = useState([]);
+    const [destacado, setDestacado] = useState(null);
+    const [cargando, setCargando] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchData = async () => {
+        const obtenerDatos = async () => {
             try {
-                const data = await igdbService.getTrendingGames();
-                setTrending(data);
-                if (data.length > 0) {
-                    setFeatured(data[0]); // Use first trending as featured for now
+                const datos = await igdbService.obtenerJuegosTendencia();
+                setTendencia(datos);
+                if (datos.length > 0) {
+                    setDestacado(datos[0]); // Usamos el primero en tendencia como destacado
                 }
             } catch (error) {
-                console.error("Failed to fetch games", error);
+                console.error("Error al obtener juegos", error);
             } finally {
-                setLoading(false);
+                setCargando(false);
             }
         };
-        fetchData();
+        obtenerDatos();
     }, []);
 
     return (
         <div className="home-page-v2">
-            {/* Dynamic Hero Section */}
+            {/* Sección Hero Dinámica */}
             <AnimatePresence>
-                {featured && (
+                {destacado && (
                     <motion.section
                         className="home-hero"
                         initial={{ opacity: 0 }}
@@ -42,7 +42,7 @@ const Home = () => {
                     >
                         <div className="hero-background">
                             <img
-                                src={formatIGDBImage(featured.cover?.url, 't_screenshot_big')}
+                                src={formatearImagenIGDB(destacado.portada?.url, 't_screenshot_big')}
                                 alt="hero bg"
                                 className="hero-img"
                             />
@@ -66,7 +66,7 @@ const Home = () => {
                                 animate={{ y: 0, opacity: 1 }}
                                 transition={{ delay: 0.4 }}
                             >
-                                {featured.name}
+                                {destacado.nombre}
                             </motion.h1>
 
                             <motion.div
@@ -75,8 +75,8 @@ const Home = () => {
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.6 }}
                             >
-                                {featured.platforms?.slice(0, 3).map(p => (
-                                    <span key={p.id} className="platform-tag">{p.name}</span>
+                                {destacado.plataformas?.slice(0, 3).map(p => (
+                                    <span key={p.id} className="platform-tag">{p.nombre}</span>
                                 ))}
                             </motion.div>
 
@@ -88,14 +88,14 @@ const Home = () => {
                             >
                                 <button
                                     className="btn-primary"
-                                    onClick={() => navigate(`/game/${featured.id}`)}
+                                    onClick={() => navigate(`/game/${destacado.id}`)}
                                 >
                                     <Play size={20} fill="currentColor" />
                                     <span>Explorar Ahora</span>
                                 </button>
                                 <button
                                     className="btn-outline glass"
-                                    onClick={() => navigate(`/game/${featured.id}`)}
+                                    onClick={() => navigate(`/game/${destacado.id}`)}
                                 >
                                     <Info size={20} />
                                     <span>Más Información</span>
@@ -122,10 +122,10 @@ const Home = () => {
                     </div>
                 </motion.div>
 
-                <GameGrid games={trending} loading={loading} />
+                <GameGrid juegos={tendencia} cargando={cargando} />
             </section>
 
-            {/* Stats / CTA Section */}
+            {/* Sección Estadísticas / CTA */}
             <motion.section
                 className="cta-section glass"
                 initial={{ opacity: 0, y: 50 }}

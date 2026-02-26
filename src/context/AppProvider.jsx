@@ -1,78 +1,127 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { storage } from '../services/storage';
 import { authService } from '../services/authService';
+import { coleccionService } from '../services/coleccionService';
 
-const AppContext = createContext();
+const ContextoApp = createContext();
 
-export const AppProvider = ({ children }) => {
-    const [backlog, setBacklog] = useLocalStorage(storage.KEYS.BACKLOG, []);
-    const [user, setUser] = useLocalStorage('infogamer_user', null);
+export const ProveedorApp = ({ children }) => {
 
-    // Notification state
-    const [notification, setNotification] = useState(null);
+    const [coleccion, setColeccion] = useState([]);
+    const [cargandoColeccion, setCargandoColeccion] = useState(false);
 
-    const showNotification = (message, type = 'success') => {
-        setNotification({ message, type });
-        setTimeout(() => setNotification(null), 4000);
+    const [usuario, setUsuario] = useLocalStorage('infogamer_user', null);
+
+    useEffect(() => {
+        const cargarColeccion = async () => {
+            setCargandoColeccion(true);
+            if (usuario) {
+                try {
+                    const coleccionUsuario = await coleccionService.obtenerColeccion(usuario.id);
+                    setColeccion(coleccionUsuario || []);
+                } catch (error) {
+                    console.error("Error al cargar la colección del usuario", error);
+                }
+            } else {
+                const local = localStorage.getItem('guest_backlog');
+                setColeccion(local ? JSON.parse(local) : []);
+            }
+            setCargandoColeccion(false);
+        };
+        cargarColeccion();
+    }, [usuario]);
+
+    const [notificacion, setNotificacion] = useState(null);
+
+    const mostrarNotificacion = (mensaje, tipo = 'success') => {
+        setNotificacion({ mensaje, tipo });
+        setTimeout(() => setNotificacion(null), 4000);
     };
 
-    const addToBacklog = (game) => {
-        if (!backlog.find(g => g.id === game.id)) {
-            setBacklog(prev => [...prev, game]);
-            showNotification(`"${game.name}" añadido a tu colección`, 'success');
+    const agregarAColeccion = async (juego) => {
+        if (!coleccion.find(j => j.id === juego.id)) {
+            const nuevaColeccion = [...coleccion, juego];
+            setColeccion(nuevaColeccion);
+            mostrarNotificacion(`"${juego.nombre}" añadido a tu colección`, 'success');
+
+            if (usuario) {
+                await coleccionService.agregarAColeccion(usuario.id, juego);
+            } else {
+                localStorage.setItem('guest_backlog', JSON.stringify(nuevaColeccion));
+            }
         }
     };
 
-    const removeFromBacklog = (gameId) => {
-        const game = backlog.find(g => g.id === gameId);
-        setBacklog(prev => prev.filter(g => g.id !== gameId));
-        if (game) {
-            showNotification(`"${game.name}" eliminado de tu colección`, 'info');
+    const eliminarDeColeccion = async (idJuego) => {
+        const juego = coleccion.find(j => j.id === idJuego);
+        if (juego) {
+            const nuevaColeccion = coleccion.filter(j => j.id !== idJuego);
+            setColeccion(nuevaColeccion);
+            mostrarNotificacion(`"${juego.nombre}" eliminado de tu colección`, 'info');
+
+            if (usuario) {
+                await coleccionService.eliminarDeColeccion(usuario.id, idJuego);
+            } else {
+                localStorage.setItem('guest_backlog', JSON.stringify(nuevaColeccion));
+            }
         }
     };
 
-    const loginUser = (userData) => {
-        setUser(userData);
-        showNotification(`¡Bienvenido de nuevo, ${userData.username}!`, 'success');
+    const iniciarSesion = (datosUsuario) => {
+        setUsuario(datosUsuario);
+        mostrarNotificacion(`¡Bienvenido de nuevo, ${datosUsuario.username}!`, 'success');
     };
 
-    const logoutUser = () => {
-        setUser(null);
-        showNotification('Has cerrado sesión correctamente', 'info');
+    const cerrarSesion = () => {
+        setUsuario(null);
+        mostrarNotificacion('Has cerrado sesión correctamente', 'info');
     };
 
-    const updateUser = async (updatedData) => {
-        if (!user?.id) return;
+    const actualizarUsuario = async (datosActualizados) => {
+        if (!usuario?.id) return;
         try {
-            const updatedUser = await authService.updateUser(user.id, updatedData);
-            setUser(updatedUser);
-            return updatedUser;
+            const usuarioActualizado = await authService.actualizarUsuario(usuario.id, datosActualizados);
+            setUsuario(usuarioActualizado);
+            return usuarioActualizado;
         } catch (error) {
-            showNotification('Error al sincronizar con el servidor', 'error');
+            mostrarNotificacion('Error al sincronizar con el servidor', 'error');
             console.error(error);
         }
     };
 
     return (
-        <AppContext.Provider value={{
-            backlog,
-            addToBacklog,
-            removeFromBacklog,
-            notification,
-            showNotification,
-            user,
-            loginUser,
-            logoutUser,
-            updateUser
+        <ContextoApp.Provider value={{
+            backlog: coleccion, // Mantenemos backlog como alias para evitar roturas inmediatas
+            coleccion,
+            addToBacklog: agregarAColeccion,
+            agregarAColeccion,
+            removeFromBacklog: eliminarDeColeccion,
+            eliminarDeColeccion,
+            notification: notificacion,
+            notificacion,
+            showNotification: mostrarNotificacion,
+            mostrarNotificacion,
+            user: usuario,
+            usuario,
+            loginUser: iniciarSesion,
+            iniciarSesion,
+            logoutUser: cerrarSesion,
+            cerrarSesion,
+            updateUser: actualizarUsuario,
+            actualizarUsuario,
+            cargandoColeccion
         }}>
             {children}
-        </AppContext.Provider>
+        </ContextoApp.Provider>
     );
 };
 
-export const useAppContext = () => {
-    const context = useContext(AppContext);
-    if (!context) throw new Error('useAppContext must be used within an AppProvider');
-    return context;
+export const useContextoApp = () => {
+    const contexto = useContext(ContextoApp);
+    if (!contexto) throw new Error('useContextoApp debe usarse dentro de un ProveedorApp');
+    return contexto;
 };
+
+// Aliases para compatibilidad temporal mientras refactorizamos el resto de archivos
+export const useAppContext = useContextoApp;
+export const AppProvider = ProveedorApp;

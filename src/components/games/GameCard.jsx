@@ -1,14 +1,14 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Star, Plus, BookmarkCheck, ChevronRight } from 'lucide-react';
-import { useAppContext } from '../../context/AppProvider';
-import { formatIGDBImage } from '../../services/igdbService';
+import { useContextoApp } from '../../context/AppProvider';
+import { formatearImagenIGDB } from '../../services/igdbService';
 import '../../styles/GameCard.css';
 
 const GameCard = ({ game, index }) => {
     const navigate = useNavigate();
-    const { user, addToBacklog, backlog, removeFromBacklog, showNotification } = useAppContext();
-    const isInBacklog = backlog.some(g => g.id === game.id);
+    const { usuario, agregarAColeccion, coleccion, eliminarDeColeccion, mostrarNotificacion } = useContextoApp();
+    const estaEnColeccion = coleccion.some(g => g.id === game.id);
 
     return (
         <motion.div
@@ -21,45 +21,45 @@ const GameCard = ({ game, index }) => {
         >
             <div className="card-media">
                 <img
-                    src={formatIGDBImage(game.cover?.url, 't_cover_big_2x')}
-                    alt={game.name}
+                    src={formatearImagenIGDB(game.portada?.url, 't_cover_big_2x')}
+                    alt={game.nombre}
                     loading="lazy"
                 />
                 <div className="card-badge">
                     <Star size={12} fill="#fbbf24" color="#fbbf24" />
-                    <span>{(game.total_rating / 20).toFixed(1)}</span>
+                    <span>{game.valoracion ? (game.valoracion / 20).toFixed(1) : 'N/A'}</span>
                 </div>
                 <div className="card-overlay">
                     <motion.button
-                        className={`card-add-btn ${isInBacklog ? 'active' : ''}`}
+                        className={`card-add-btn ${estaEnColeccion ? 'active' : ''}`}
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                         onClick={(e) => {
                             e.stopPropagation();
-                            if (!user) {
-                                showNotification('Debes registrarte para guardar o hacer reseñas en la web', 'info');
+                            if (!usuario) {
+                                mostrarNotificacion('Debes registrarte para guardar o hacer reseñas en la web', 'info');
                                 navigate('/login');
                                 return;
                             }
-                            if (isInBacklog) {
-                                removeFromBacklog(game.id);
+                            if (estaEnColeccion) {
+                                eliminarDeColeccion(game.id);
                             } else {
-                                addToBacklog(game);
+                                agregarAColeccion(game);
                             }
                         }}
                     >
-                        {isInBacklog ? <BookmarkCheck size={20} /> : <Plus size={20} />}
+                        {estaEnColeccion ? <BookmarkCheck size={20} /> : <Plus size={20} />}
                     </motion.button>
                 </div>
             </div>
 
             <div className="card-info">
                 <div className="card-platforms">
-                    {game.platforms?.slice(0, 2).map(p => (
-                        <span key={p.id} className="platform-pill">{p.name}</span>
+                    {game.plataformas?.slice(0, 2).map(p => (
+                        <span key={p.id} className="platform-pill">{p.nombre}</span>
                     ))}
                 </div>
-                <h3 className="card-title">{game.name}</h3>
+                <h3 className="card-title">{game.nombre}</h3>
                 <div className="card-explore">
                     <span>Ver Detalles</span>
                     <ChevronRight size={14} />

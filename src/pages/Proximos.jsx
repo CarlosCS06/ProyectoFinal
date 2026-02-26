@@ -1,45 +1,46 @@
+
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { igdbService, formatIGDBImage } from '../services/igdbService';
+import { igdbService, formatearImagenIGDB } from '../services/igdbService';
 import { Calendar, Bookmark, BookmarkCheck, ChevronRight, Clock, MapPin, Search } from 'lucide-react';
-import { useAppContext } from '../context/AppProvider';
+import { useContextoApp } from '../context/AppProvider';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Releases.css';
 
-const Releases = () => {
-    const [games, setGames] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState('');
-    const { user, addToBacklog, backlog, removeFromBacklog, showNotification } = useAppContext();
+const Proximos = () => {
+    const [juegos, setJuegos] = useState([]);
+    const [cargando, setCargando] = useState(true);
+    const [terminoBusqueda, setTerminoBusqueda] = useState('');
+    const { usuario, agregarAColeccion, coleccion, eliminarDeColeccion, mostrarNotificacion } = useContextoApp();
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchReleases = async () => {
-            setLoading(true);
+        const obtenerProximos = async () => {
+            setCargando(true);
             try {
-                const data = await igdbService.getUpcomingReleases();
-                setGames(data);
+                const datos = await igdbService.obtenerProximos();
+                setJuegos(datos);
             } catch (error) {
-                console.error("Error fetching releases", error);
+                console.error("Error al obtener lanzamientos", error);
             } finally {
-                setLoading(false);
+                setCargando(false);
             }
         };
-        fetchReleases();
+        obtenerProximos();
     }, []);
 
-    const handleBacklogAction = (e, game) => {
+    const manejarAccionColeccion = (e, juego) => {
         e.stopPropagation();
-        if (!user) {
-            showNotification('Debes registrarte para guardar o hacer reseñas en la web', 'info');
+        if (!usuario) {
+            mostrarNotificacion('Debes registrarte para guardar o hacer reseñas en la web', 'info');
             navigate('/login');
             return;
         }
-        const isInBacklog = backlog.some(bg => bg.id === game.id);
-        if (isInBacklog) {
-            removeFromBacklog(game.id);
+        const estaEnColeccion = coleccion.some(bg => bg.id === juego.id);
+        if (estaEnColeccion) {
+            eliminarDeColeccion(juego.id);
         } else {
-            addToBacklog(game);
+            agregarAColeccion(juego);
         }
     };
 
@@ -63,58 +64,58 @@ const Releases = () => {
                     <input
                         type="text"
                         placeholder="Buscar lanzamiento..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
+                        value={terminoBusqueda}
+                        onChange={(e) => setTerminoBusqueda(e.target.value)}
                     />
                 </div>
             </header>
 
-            {loading ? (
+            {cargando ? (
                 <div className="loading-container">
                     <div className="loader"></div>
                 </div>
             ) : (
                 <div className="releases-timeline">
-                    {games.filter(g => g.name.toLowerCase().includes(searchTerm.toLowerCase())).length > 0 ? (
-                        games
-                            .filter(g => g.name.toLowerCase().includes(searchTerm.toLowerCase()))
-                            .map((game, index) => {
-                                const isInBacklog = backlog.some(bg => bg.id === game.id);
+                    {juegos.filter(g => g.nombre.toLowerCase().includes(terminoBusqueda.toLowerCase())).length > 0 ? (
+                        juegos
+                            .filter(g => g.nombre.toLowerCase().includes(terminoBusqueda.toLowerCase()))
+                            .map((juego, indice) => {
+                                const estaEnColeccion = coleccion.some(bg => bg.id === juego.id);
                                 return (
                                     <motion.div
-                                        key={game.id}
+                                        key={juego.id}
                                         className="release-card glass"
                                         initial={{ opacity: 0, y: 30 }}
                                         animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: index * 0.05 }}
-                                        onClick={() => navigate(`/game/${game.id}`)}
+                                        transition={{ delay: indice * 0.05 }}
+                                        onClick={() => navigate(`/game/${juego.id}`)}
                                     >
                                         <div className="release-date-tag">
                                             <Clock size={14} />
-                                            <span>{new Date(game.first_release_date * 1000).toLocaleDateString()}</span>
+                                            <span>{new Date(juego.fecha_lanzamiento * 1000).toLocaleDateString()}</span>
                                         </div>
 
                                         <div className="release-content">
                                             <div className="release-cover">
-                                                <img src={formatIGDBImage(game.cover?.url, 't_cover_big')} alt={game.name} />
+                                                <img src={formatearImagenIGDB(juego.portada?.url, 't_cover_big')} alt={juego.nombre} />
                                             </div>
                                             <div className="release-info">
                                                 <div className="release-platforms">
-                                                    {game.platforms?.slice(0, 3).map(p => (
-                                                        <span key={p.id} className="platform-pill mini">{p.name}</span>
+                                                    {juego.plataformas?.slice(0, 3).map(p => (
+                                                        <span key={p.id} className="platform-pill mini">{p.nombre}</span>
                                                     ))}
                                                 </div>
-                                                <h3>{game.name}</h3>
-                                                <p className="release-genres">{game.genres?.map(g => g.name).join(', ')}</p>
+                                                <h3>{juego.nombre}</h3>
+                                                <p className="release-genres">{juego.generos?.map(g => g.nombre).join(', ')}</p>
                                             </div>
                                             <div className="release-actions">
                                                 <button
-                                                    className={`wishlist-btn glass ${isInBacklog ? 'active' : ''}`}
-                                                    onClick={(e) => handleBacklogAction(e, game)}
-                                                    title={isInBacklog ? "En mi Colección" : "Añadir a deseados"}
+                                                    className={`wishlist-btn glass ${estaEnColeccion ? 'active' : ''}`}
+                                                    onClick={(e) => manejarAccionColeccion(e, juego)}
+                                                    title={estaEnColeccion ? "En mi Colección" : "Añadir a deseados"}
                                                 >
-                                                    {isInBacklog ? <BookmarkCheck size={20} /> : <Bookmark size={20} />}
-                                                    <span>{isInBacklog ? 'En mi Colección' : 'Lo quiero'}</span>
+                                                    {estaEnColeccion ? <BookmarkCheck size={20} /> : <Bookmark size={20} />}
+                                                    <span>{estaEnColeccion ? 'En mi Colección' : 'Lo quiero'}</span>
                                                 </button>
                                                 <ChevronRight size={20} className="chevron" />
                                             </div>
@@ -133,4 +134,4 @@ const Releases = () => {
     );
 };
 
-export default Releases;
+export default Proximos;

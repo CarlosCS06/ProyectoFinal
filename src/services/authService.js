@@ -1,83 +1,44 @@
-const BASE_URL = 'http://localhost:3001';
-const isProduction = typeof window !== 'undefined' && window.location.hostname !== 'localhost';
-
-// Mock users para Vercel (guest mode)
-const mockUsers = {
-    'test@test.com': {
-        id: 1,
-        email: 'test@test.com',
-        password: 'test123',
-        username: 'TestUser',
-        avatar: 'https://via.placeholder.com/150',
-        joinedDate: new Date().toISOString()
-    }
-};
+const URL_BASE = 'http://localhost:3001';
 
 export const authService = {
-    login: async (email, password) => {
-        if (isProduction) {
-            // En Vercel, usar mock
-            const user = mockUsers[email];
-            if (!user || user.password !== password) {
-                throw new Error('Credenciales inválidas');
-            }
-            return { id: user.id, email: user.email, username: user.username, avatar: user.avatar };
-        }
-        
+    iniciarSesion: async (email, password) => {
         // En desarrollo, usar API local
-        const response = await fetch(`${BASE_URL}/users?email=${email}&password=${password}`);
-        const users = await response.json();
-        if (users.length === 0) throw new Error('Credenciales inválidas');
-        return users[0];
+        const respuesta = await fetch(`${URL_BASE}/users?email=${email}&password=${password}`);
+        const usuarios = await respuesta.json();
+        if (usuarios.length === 0) throw new Error('Credenciales inválidas');
+        return usuarios[0];
     },
 
-    register: async (userData) => {
-        if (isProduction) {
-            // En Vercel, simular registro con localStorage
-            const allUsers = JSON.parse(localStorage.getItem('infogamer_all_users') || '{}');
-            if (allUsers[userData.email]) {
-                throw new Error('El correo ya está registrado');
-            }
-            const newUser = {
-                id: Date.now(),
-                ...userData,
-                joinedDate: new Date().toISOString()
-            };
-            allUsers[userData.email] = newUser;
-            localStorage.setItem('infogamer_all_users', JSON.stringify(allUsers));
-            return newUser;
-        }
-
+    registrarse: async (datosUsuario) => {
         // En desarrollo, usar API local
-        const checkRes = await fetch(`${BASE_URL}/users?email=${userData.email}`);
-        const existing = await checkRes.json();
-        if (existing.length > 0) throw new Error('El correo ya está registrado');
+        const respuestaVerificacion = await fetch(`${URL_BASE}/users?email=${datosUsuario.email}`);
+        const existente = await respuestaVerificacion.json();
+        if (existente.length > 0) throw new Error('El correo ya está registrado');
 
-        const response = await fetch(`${BASE_URL}/users`, {
+        const respuesta = await fetch(`${URL_BASE}/users`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                ...userData,
-                joinedDate: new Date().toISOString()
+                ...datosUsuario,
+                fechaRegistro: new Date().toISOString()
             }),
         });
-        if (!response.ok) throw new Error('Error al registrar usuario');
-        return await response.json();
+        if (!respuesta.ok) throw new Error('Error al registrar usuario');
+        return await respuesta.json();
     },
 
-    updateUser: async (userId, updatedData) => {
-        if (isProduction) {
-            // En Vercel, actualizar en localStorage
-            return { id: userId, ...updatedData };
-        }
-
-        // En desarrollo, usar API local
-        const response = await fetch(`${BASE_URL}/users/${userId}`, {
+    actualizarUsuario: async (idUsuario, datosActualizados) => {
+        const respuesta = await fetch(`${URL_BASE}/users/${idUsuario}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(updatedData),
+            body: JSON.stringify(datosActualizados),
         });
-        if (!response.ok) throw new Error('Error al actualizar usuario');
-        return await response.json();
-    }
+        if (!respuesta.ok) throw new Error('Error al actualizar usuario');
+        return await respuesta.json();
+    },
+
+    // Aliases para compatibilidad
+    login: (e, p) => authService.iniciarSesion(e, p),
+    register: (d) => authService.registrarse(d),
+    updateUser: (id, d) => authService.actualizarUsuario(id, d)
 };

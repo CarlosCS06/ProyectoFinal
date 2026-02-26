@@ -1,51 +1,32 @@
-const BASE_URL = 'http://localhost:3001';
-const isProduction = typeof window !== 'undefined' && window.location.hostname !== 'localhost';
+const URL_DB_LOCAL = 'http://localhost:3001';
 
 export const reviewsService = {
-    getReviews: async (gameId) => {
-        if (isProduction) {
-            // En Vercel, usar localStorage
-            const allReviews = JSON.parse(localStorage.getItem('infogamer_reviews') || '[]');
-            return allReviews.filter(r => r.gameId === gameId);
-        }
-        
-        const response = await fetch(`${BASE_URL}/reviews?gameId=${gameId}`);
-        if (!response.ok) throw new Error('Error fetching reviews');
-        return await response.json();
+    obtenerReseñas: async (idJuego) => {
+        const respuesta = await fetch(`${URL_DB_LOCAL}/reviews?gameId=${idJuego}`);
+        if (!respuesta.ok) throw new Error('Error al obtener reseñas');
+        return await respuesta.json();
     },
 
-    addReview: async (review) => {
-        if (isProduction) {
-            // En Vercel, guardar en localStorage
-            const allReviews = JSON.parse(localStorage.getItem('infogamer_reviews') || '[]');
-            const newReview = { id: Date.now(), ...review, date: new Date().toISOString() };
-            allReviews.push(newReview);
-            localStorage.setItem('infogamer_reviews', JSON.stringify(allReviews));
-            return newReview;
-        }
-
-        const response = await fetch(`${BASE_URL}/reviews`, {
+    agregarReseña: async (reseña) => {
+        const respuesta = await fetch(`${URL_DB_LOCAL}/reviews`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(review),
+            body: JSON.stringify(reseña),
         });
-        if (!response.ok) throw new Error('Error adding review');
-        return await response.json();
+        if (!respuesta.ok) throw new Error('Error al añadir reseña');
+        return await respuesta.json();
     },
 
-    deleteReview: async (reviewId) => {
-        if (isProduction) {
-            // En Vercel, eliminar de localStorage
-            let allReviews = JSON.parse(localStorage.getItem('infogamer_reviews') || '[]');
-            allReviews = allReviews.filter(r => r.id !== reviewId);
-            localStorage.setItem('infogamer_reviews', JSON.stringify(allReviews));
-            return true;
-        }
-
-        const response = await fetch(`${BASE_URL}/reviews/${reviewId}`, {
+    borrarReseña: async (idReseña) => {
+        const respuesta = await fetch(`${URL_DB_LOCAL}/reviews/${idReseña}`, {
             method: 'DELETE',
         });
-        if (!response.ok) throw new Error('Error deleting review');
+        if (!respuesta.ok) throw new Error('Error al borrar reseña');
         return true;
     },
+
+    // Aliases para compatibilidad
+    getReviews: (id) => reviewsService.obtenerReseñas(id),
+    addReview: (r) => reviewsService.agregarReseña(r),
+    deleteReview: (id) => reviewsService.borrarReseña(id)
 };

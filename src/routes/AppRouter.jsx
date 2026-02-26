@@ -1,24 +1,24 @@
 import { Routes, Route } from 'react-router-dom';
 import Home from '../pages/Home';
-import Explore from '../pages/Explore';
-import GameDetail from '../pages/GameDetail';
-import Backlog from '../pages/Backlog';
-import Profile from '../pages/Profile';
+import Explorar from '../pages/Explorar';
+import DetallesJuegos from '../pages/DetallesJuegos';
+import Coleccion from '../pages/Coleccion';
+import Perfil from '../pages/Perfil';
 import Login from '../pages/Login';
 import Rankings from '../pages/Rankings';
-import Releases from '../pages/Releases';
+import Proximos from '../pages/Proximos';
 
 const AppRouter = () => {
     return (
         <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/explore" element={<Explore />} />
-            <Route path="/game/:id" element={<GameDetail />} />
-            <Route path="/backlog" element={<Backlog />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/explore" element={<Explorar />} />
+            <Route path="/game/:id" element={<DetallesJuegos />} />
+            <Route path="/coleccion" element={<Coleccion />} />
+            <Route path="/profile" element={<Perfil />} />
             <Route path="/login" element={<Login />} />
             <Route path="/rankings" element={<Rankings />} />
-            <Route path="/releases" element={<Releases />} />
+            <Route path="/releases" element={<Proximos />} />
             <Route path="*" element={<Home />} /> {/* Redirección temporal */}
         </Routes>
     );

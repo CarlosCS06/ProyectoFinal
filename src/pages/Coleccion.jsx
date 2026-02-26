@@ -1,22 +1,13 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useAppContext } from '../context/AppProvider';
+import { useContextoApp } from '../context/AppProvider';
 import GameGrid from '../components/games/GameGrid';
 import { Bookmark, Sparkles, Ghost } from 'lucide-react';
 
-const Backlog = () => {
-    const { user, backlog, showNotification } = useAppContext();
+const Coleccion = () => {
+    const { usuario, coleccion, mostrarNotificacion } = useContextoApp();
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!user) {
-            showNotification('Debes registrarte para guardar o hacer reseñas en la web', 'info');
-            navigate('/login');
-        }
-    }, [user, navigate]);
-
-    if (!user) return null;
 
     return (
         <div className="backlog-page">
@@ -37,8 +28,8 @@ const Backlog = () => {
                 </motion.div>
             </header>
 
-            {backlog.length > 0 ? (
-                <GameGrid games={backlog} loading={false} />
+            {coleccion.length > 0 ? (
+                <GameGrid juegos={coleccion} cargando={false} />
             ) : (
                 <motion.div
                     className="empty-backlog glass"
@@ -66,7 +57,7 @@ const Backlog = () => {
                     <button
                         className="btn-primary"
                         style={{ marginTop: '1rem' }}
-                        onClick={() => window.location.href = '/explore'}
+                        onClick={() => navigate('/explore')}
                     >
                         <Sparkles size={18} />
                         Buscar Videojuegos
@@ -77,4 +68,4 @@ const Backlog = () => {
     );
 };
 
-export default Backlog;
+export default Coleccion;

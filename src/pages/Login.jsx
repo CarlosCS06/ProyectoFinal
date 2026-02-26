@@ -3,38 +3,38 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, User, ArrowRight, Gamepad2, Sparkles } from 'lucide-react';
 import { authService } from '../services/authService';
-import { useAppContext } from '../context/AppProvider';
+import { useContextoApp } from '../context/AppProvider';
 import '../styles/Login.css';
 
 const Login = () => {
-    const [isLogin, setIsLogin] = useState(true);
-    const [formData, setFormData] = useState({
+    const [esLogin, setEsLogin] = useState(true);
+    const [datosFormulario, setDatosFormulario] = useState({
         email: '',
         password: '',
         username: ''
     });
-    const [loading, setLoading] = useState(false);
-    const { loginUser, showNotification } = useAppContext();
+    const [cargando, setCargando] = useState(false);
+    const { iniciarSesion, mostrarNotificacion } = useContextoApp();
     const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
+    const manejarEnvio = async (e) => {
         e.preventDefault();
-        setLoading(true);
+        setCargando(true);
 
         try {
-            if (isLogin) {
-                const user = await authService.login(formData.email, formData.password);
-                loginUser(user);
+            if (esLogin) {
+                const usuario = await authService.iniciarSesion(datosFormulario.email, datosFormulario.password);
+                iniciarSesion(usuario);
                 navigate('/profile');
             } else {
-                const newUser = await authService.register(formData);
-                loginUser(newUser);
+                const nuevoUsuario = await authService.registrarse(datosFormulario);
+                iniciarSesion(nuevoUsuario);
                 navigate('/profile');
             }
         } catch (error) {
-            showNotification(error.message, 'error');
+            mostrarNotificacion(error.message, 'error');
         } finally {
-            setLoading(false);
+            setCargando(false);
         }
     };
 
@@ -78,20 +78,20 @@ const Login = () => {
                     animate={{ x: 0, opacity: 1 }}
                 >
                     <div className="form-header">
-                        <h2>{isLogin ? '¡Hola de nuevo!' : 'Crea tu cuenta'}</h2>
-                        <p>{isLogin ? 'Inicia sesión para acceder a tu colección.' : 'Únete a la comunidad de InfoGamer.'}</p>
+                        <h2>{esLogin ? '¡Hola de nuevo!' : 'Crea tu cuenta'}</h2>
+                        <p>{esLogin ? 'Inicia sesión para acceder a tu colección.' : 'Únete a la comunidad de InfoGamer.'}</p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="auth-form">
-                        {!isLogin && (
+                    <form onSubmit={manejarEnvio} className="auth-form">
+                        {!esLogin && (
                             <div className="input-group glass">
                                 <User size={20} />
                                 <input
                                     type="text"
                                     placeholder="Nombre de Usuario"
                                     required
-                                    value={formData.username}
-                                    onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                                    value={datosFormulario.username}
+                                    onChange={(e) => setDatosFormulario({ ...datosFormulario, username: e.target.value })}
                                 />
                             </div>
                         )}
@@ -102,8 +102,8 @@ const Login = () => {
                                 type="email"
                                 placeholder="Correo Electrónico"
                                 required
-                                value={formData.email}
-                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                value={datosFormulario.email}
+                                onChange={(e) => setDatosFormulario({ ...datosFormulario, email: e.target.value })}
                             />
                         </div>
 
@@ -113,15 +113,15 @@ const Login = () => {
                                 type="password"
                                 placeholder="Contraseña"
                                 required
-                                value={formData.password}
-                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                value={datosFormulario.password}
+                                onChange={(e) => setDatosFormulario({ ...datosFormulario, password: e.target.value })}
                             />
                         </div>
 
-                        <button type="submit" className="btn-primary auth-submit" disabled={loading}>
-                            {loading ? 'Procesando...' : (
+                        <button type="submit" className="btn-primary auth-submit" disabled={cargando}>
+                            {cargando ? 'Procesando...' : (
                                 <>
-                                    <span>{isLogin ? 'Entrar' : 'Registrarse'}</span>
+                                    <span>{esLogin ? 'Entrar' : 'Registrarse'}</span>
                                     <ArrowRight size={20} />
                                 </>
                             )}
@@ -130,9 +130,9 @@ const Login = () => {
 
                     <div className="form-footer">
                         <p>
-                            {isLogin ? '¿No tienes cuenta?' : '¿Ya eres miembro?'}
-                            <button onClick={() => setIsLogin(!isLogin)} className="toggle-auth">
-                                {isLogin ? 'Regístrate' : 'Inicia Sesión'}
+                            {esLogin ? '¿No tienes cuenta?' : '¿Ya eres miembro?'}
+                            <button onClick={() => setEsLogin(!esLogin)} className="toggle-auth">
+                                {esLogin ? 'Regístrate' : 'Inicia Sesión'}
                             </button>
                         </p>
                     </div>

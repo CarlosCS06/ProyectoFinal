@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { X, Send, User, MessageSquare, Star } from 'lucide-react';
 import { reviewsService } from '../../services/reviewsService';
-import { useAppContext } from '../../context/AppProvider';
+import { useContextoApp } from '../../context/AppProvider';
 
 const ReviewForm = ({ gameId, gameName, onClose, onReviewAdded }) => {
-    const { user, showNotification } = useAppContext();
+    const { usuario, mostrarNotificacion } = useContextoApp();
     const [rating, setRating] = useState(5);
     const [comment, setComment] = useState('');
     const [submitting, setSubmitting] = useState(false);
@@ -13,7 +13,7 @@ const ReviewForm = ({ gameId, gameName, onClose, onReviewAdded }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!comment) {
-            showNotification('Por favor, escribe un comentario', 'error');
+            mostrarNotificacion('Por favor, escribe un comentario', 'error');
             return;
         }
 
@@ -21,19 +21,20 @@ const ReviewForm = ({ gameId, gameName, onClose, onReviewAdded }) => {
         try {
             const newReview = {
                 gameId: parseInt(gameId),
-                user: user.username,
+                gameName: gameName,
+                user: usuario.username,
                 rating,
                 comment,
                 date: new Date().toISOString()
             };
 
-            await reviewsService.addReview(newReview);
-            showNotification('¡Reseña publicada con éxito!', 'success');
+            await reviewsService.agregarReseña(newReview);
+            mostrarNotificacion('¡Reseña publicada con éxito!', 'success');
             if (onReviewAdded) onReviewAdded();
             onClose();
         } catch (error) {
-            console.error("Error posting review", error);
-            showNotification('Error al enviar la reseña', 'error');
+            console.error("Error al publicar la reseña", error);
+            mostrarNotificacion('Error al enviar la reseña', 'error');
         } finally {
             setSubmitting(false);
         }
@@ -59,13 +60,15 @@ const ReviewForm = ({ gameId, gameName, onClose, onReviewAdded }) => {
                     <button className="close-btn-round" onClick={onClose}><X size={20} /></button>
                 </div>
 
+
+
                 <form onSubmit={handleSubmit} className="review-form">
                     <p className="form-subtitle">Compartiendo tu experiencia sobre <strong>{gameName}</strong></p>
 
                     <div className="form-group">
                         <label><User size={16} /> Publicando como</label>
                         <div className="user-badge-static glass">
-                            <span className="user-name-highlight">{user?.username}</span>
+                            <span className="user-name-highlight">{usuario?.username}</span>
                         </div>
                     </div>
 
@@ -78,7 +81,8 @@ const ReviewForm = ({ gameId, gameName, onClose, onReviewAdded }) => {
                                     type="button"
                                     className={`star-btn ${rating >= num ? 'active' : ''}`}
                                     onClick={() => setRating(num)}
-                                    onMouseEnter={() => { }} // Additional event req
+                                    // Evento adicional requerido se podría añadir aquí
+                                    onMouseEnter={() => { }}
                                 >
                                     <Star size={24} fill={rating >= num ? '#fbbf24' : 'transparent'} />
                                 </button>
@@ -108,6 +112,7 @@ const ReviewForm = ({ gameId, gameName, onClose, onReviewAdded }) => {
                     </button>
                 </form>
             </motion.div>
+
         </motion.div>
     );
 };

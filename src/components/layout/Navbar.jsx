@@ -1,18 +1,18 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Gamepad2, Compass, Bookmark, Search, User, Trophy, Calendar } from 'lucide-react';
+import { Compass, Bookmark, Search, User, Trophy, Calendar } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useAppContext } from '../../context/AppProvider';
+import { useContextoApp } from '../../context/AppProvider';
 import '../../styles/Navbar.css';
 
 const Navbar = () => {
     const location = useLocation();
-    const { user } = useAppContext();
+    const { usuario } = useContextoApp();
 
     const navItems = [
         { path: '/explore', icon: Compass, label: 'Explorar' },
         { path: '/rankings', icon: Trophy, label: 'Los Mejores' },
         { path: '/releases', icon: Calendar, label: 'Próximos' },
-        { path: '/backlog', icon: Bookmark, label: 'Mi Colección' },
+        { path: '/coleccion', icon: Bookmark, label: 'Mi Colección' },
     ];
 
     return (
@@ -51,13 +51,10 @@ const Navbar = () => {
                 </div>
 
                 <div className="nav-actions">
-                    <div className="search-trigger">
-                        <Search size={20} />
-                    </div>
-                    {user ? (
+                    {usuario ? (
                         <Link to="/profile" className="profile-btn glass overflow-hidden">
-                            {user.profilePic ? (
-                                <img src={user.profilePic} alt="Perfil" className="nav-avatar-img" />
+                            {usuario.profilePic ? (
+                                <img src={usuario.profilePic} alt="Perfil" className="nav-avatar-img" />
                             ) : (
                                 <User size={18} />
                             )}
@@ -70,8 +67,8 @@ const Navbar = () => {
                         </Link>
                     )}
                 </div>
-            </motion.div>
-        </nav>
+            </motion.div >
+        </nav >
     );
 };
 

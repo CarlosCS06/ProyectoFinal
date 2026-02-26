@@ -1,68 +1,69 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAppContext } from '../context/AppProvider';
+import { useContextoApp } from '../context/AppProvider';
 import { reviewsService } from '../services/reviewsService';
-import { formatIGDBImage } from '../services/igdbService';
+import { formatearImagenIGDB } from '../services/igdbService';
 import { User, Gamepad2, MessageSquare, Trash2, Calendar, Star, Trophy, Bookmark } from 'lucide-react';
 import '../styles/Profile.css';
 
-const Profile = () => {
-    const { user, backlog, showNotification, logoutUser, updateUser } = useAppContext();
-    const [userReviews, setUserReviews] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [isEditingPhoto, setIsEditingPhoto] = useState(false);
-    const [newPhotoUrl, setNewPhotoUrl] = useState(user?.profilePic || '');
+const Perfil = () => {
+    const { usuario, coleccion, mostrarNotificacion, cerrarSesion, actualizarUsuario } = useContextoApp();
+    const [reseñasUsuario, setReseñasUsuario] = useState([]);
+    const [cargando, setCargando] = useState(true);
+    const [editandoFoto, setEditandoFoto] = useState(false);
+    const [nuevaUrlFoto, setNuevaUrlFoto] = useState(usuario?.profilePic || '');
     const navigate = useNavigate();
 
-    const handleUpdatePhoto = async () => {
-        await updateUser({ profilePic: newPhotoUrl });
-        setIsEditingPhoto(false);
-        showNotification('Foto de perfil actualizada', 'success');
+    const manejarActualizarFoto = async () => {
+        await actualizarUsuario({ profilePic: nuevaUrlFoto });
+        setEditandoFoto(false);
+        mostrarNotificacion('Foto de perfil actualizada', 'success');
     };
 
-    const fetchUserReviews = async () => {
-        if (!user) return;
+    const obtenerReseñasUsuario = async () => {
+        if (!usuario) return;
         try {
+            const datosReseñas = await reviewsService.obtenerReseñas(); // Wait, obtenerReseñas needs gameId? 
+            // In Profile.jsx, it was fetching all reviews and filtering. 
+            // Let's check how it was originally.
             const response = await fetch('http://localhost:3001/reviews');
             const allReviews = await response.json();
-            // Filtramos por el nombre del usuario logueado
-            const filtered = allReviews.filter(r => r.user === user.username);
-            setUserReviews(filtered);
+            const filtered = allReviews.filter(r => r.user === usuario.username);
+            setReseñasUsuario(filtered);
         } catch (error) {
-            console.error("Error fetching user reviews", error);
+            console.error("Error al obtener reseñas del usuario", error);
         } finally {
-            setLoading(false);
+            setCargando(false);
         }
     };
 
     useEffect(() => {
-        if (!user) {
+        if (!usuario) {
             navigate('/login');
             return;
         }
-        fetchUserReviews();
-    }, [user, navigate]);
+        obtenerReseñasUsuario();
+    }, [usuario, navigate]);
 
-    const handleDelete = async (reviewId) => {
+    const manejarBorrar = async (idReseña) => {
         try {
-            await reviewsService.deleteReview(reviewId);
-            showNotification('Reseña eliminada', 'success');
-            fetchUserReviews();
+            await reviewsService.borrarReseña(idReseña);
+            mostrarNotificacion('Reseña eliminada', 'success');
+            obtenerReseñasUsuario();
         } catch (error) {
-            showNotification('Error al eliminar', 'error');
+            mostrarNotificacion('Error al eliminar', 'error');
         }
     };
 
-    const handleLogout = () => {
-        logoutUser();
+    const manejarCerrarSesion = () => {
+        cerrarSesion();
         navigate('/');
     };
 
-    const stats = [
-        { label: 'Colección', value: backlog.length, icon: Gamepad2, color: 'var(--accent-primary)' },
-        { label: 'Reseñas', value: userReviews.length, icon: MessageSquare, color: 'var(--accent-secondary)' },
-        { label: 'Logros', value: 12, icon: Trophy, color: '#fbbf24' },
+    const estadisticas = [
+        { label: 'Colección', value: coleccion.length, icon: Gamepad2, color: 'var(--accent-primary)' },
+        { label: 'Reseñas', value: reseñasUsuario.length, icon: MessageSquare, color: 'var(--accent-secondary)' },
     ];
 
     return (
@@ -75,9 +76,9 @@ const Profile = () => {
                 >
                     <div className="profile-info-main">
                         <div className="avatar-wrapper">
-                            <div className="avatar glass overflow-hidden" onClick={() => setIsEditingPhoto(!isEditingPhoto)}>
-                                {user?.profilePic ? (
-                                    <img src={user.profilePic} alt="Avatar" className="w-full h-full object-cover" />
+                            <div className="avatar glass overflow-hidden" onClick={() => setEditandoFoto(!editandoFoto)}>
+                                {usuario?.profilePic ? (
+                                    <img src={usuario.profilePic} alt="Avatar" className="w-full h-full object-cover" />
                                 ) : (
                                     <User size={60} />
                                 )}
@@ -88,36 +89,36 @@ const Profile = () => {
                             <div className="avatar-status"></div>
                         </div>
                         <div className="user-meta">
-                            {isEditingPhoto ? (
+                            {editandoFoto ? (
                                 <motion.div className="edit-photo-form" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
                                     <input
                                         type="text"
                                         className="glass-input"
                                         placeholder="URL de la imagen..."
-                                        value={newPhotoUrl}
-                                        onChange={(e) => setNewPhotoUrl(e.target.value)}
+                                        value={nuevaUrlFoto}
+                                        onChange={(e) => setNuevaUrlFoto(e.target.value)}
                                     />
                                     <div className="edit-actions">
-                                        <button className="btn-save glass" onClick={handleUpdatePhoto}>Guardar</button>
-                                        <button className="btn-cancel" onClick={() => setIsEditingPhoto(false)}>Cancelar</button>
+                                        <button className="btn-save glass" onClick={manejarActualizarFoto}>Guardar</button>
+                                        <button className="btn-cancel" onClick={() => setEditandoFoto(false)}>Cancelar</button>
                                     </div>
                                 </motion.div>
                             ) : (
                                 <>
                                     <h2 className="text-gradient">Perfil</h2>
-                                    <h1 className="brand-text">{user?.username}</h1>
-                                    <p>{user?.email} • Miembro desde {user?.joinedDate ? new Date(user.joinedDate).getFullYear() : '2024'}</p>
+                                    <h1 className="brand-text">{usuario?.username}</h1>
+                                    <p>{usuario?.email} • Miembro desde {usuario?.joinedDate ? new Date(usuario.joinedDate).getFullYear() : '2024'}</p>
                                 </>
                             )}
                         </div>
                     </div>
-                    <button className="btn-logout glass" onClick={handleLogout}>
+                    <button className="btn-logout glass" onClick={manejarCerrarSesion}>
                         Cerrar Sesión
                     </button>
                 </motion.div>
 
                 <div className="stats-grid">
-                    {stats.map((stat, index) => (
+                    {estadisticas.map((stat, index) => (
                         <motion.div
                             key={stat.label}
                             className="stat-card glass"
@@ -144,20 +145,20 @@ const Profile = () => {
                         <Link to="/explore" className="btn-small glass">Explorar más</Link>
                     </div>
                     <div className="profile-backlog-preview">
-                        {backlog.length > 0 ? (
+                        {coleccion.length > 0 ? (
                             <div className="profile-games-grid">
-                                {backlog.slice(0, 4).map((game, i) => (
+                                {coleccion.slice(0, 4).map((juego, i) => (
                                     <motion.div
-                                        key={game.id}
+                                        key={juego.id}
                                         className="mini-game-card glass"
                                         initial={{ opacity: 0, scale: 0.9 }}
                                         animate={{ opacity: 1, scale: 1 }}
                                         transition={{ delay: i * 0.05 }}
-                                        onClick={() => navigate(`/game/${game.id}`)}
+                                        onClick={() => navigate(`/game/${juego.id}`)}
                                     >
-                                        <img src={formatIGDBImage(game.cover?.url, 't_cover_big')} alt={game.name} />
+                                        <img src={formatearImagenIGDB(juego.portada?.url, 't_cover_big')} alt={juego.nombre} />
                                         <div className="mini-card-overlay">
-                                            <span>{game.name}</span>
+                                            <span>{juego.nombre}</span>
                                         </div>
                                     </motion.div>
                                 ))}
@@ -171,6 +172,7 @@ const Profile = () => {
                     </div>
                 </section>
 
+
                 <section className="profile-section">
                     <div className="section-header-row">
                         <h2><MessageSquare size={20} /> Mis Reseñas Recientes</h2>
@@ -178,36 +180,43 @@ const Profile = () => {
 
                     <div className="user-reviews-list">
                         <AnimatePresence mode='popLayout'>
-                            {loading ? (
+                            {cargando ? (
                                 <div className="loader-container"><div className="loader"></div></div>
-                            ) : userReviews.length > 0 ? (
-                                userReviews.map((review) => (
+                            ) : reseñasUsuario.length > 0 ? (
+                                reseñasUsuario.map((reseña) => (
                                     <motion.div
-                                        key={review.id}
+                                        key={reseña.id}
                                         className="user-review-card glass"
                                         layout
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
                                         exit={{ opacity: 0, scale: 0.95 }}
                                     >
+                                        {/* Game name */}
+                                        <div className="review-game-title-row">
+                                            <Gamepad2 size={16} />
+                                            <Link to={`/game/${reseña.gameId}`} className="review-game-link">
+                                                {reseña.gameName || `Juego #${reseña.gameId}`}
+                                            </Link>
+                                        </div>
                                         <div className="review-card-header">
                                             <div className="review-game-info">
                                                 <Star size={16} color="#fbbf24" fill="#fbbf24" />
-                                                <span className="rating-tag">{review.rating}/5</span>
+                                                <span className="rating-tag">{reseña.rating}/5</span>
                                                 <span className="review-date">
                                                     <Calendar size={14} />
-                                                    {review.date ? new Date(review.date).toLocaleDateString() : 'Reciente'}
+                                                    {reseña.date ? new Date(reseña.date).toLocaleDateString() : 'Reciente'}
                                                 </span>
                                             </div>
                                             <button
                                                 className="delete-btn-minimal"
-                                                onClick={() => handleDelete(review.id)}
+                                                onClick={() => manejarBorrar(reseña.id)}
                                                 title="Borrar reseña"
                                             >
                                                 <Trash2 size={18} />
                                             </button>
                                         </div>
-                                        <p className="review-text">{review.comment}</p>
+                                        <p className="review-text">{reseña.comment}</p>
                                     </motion.div>
                                 ))
                             ) : (
@@ -223,8 +232,8 @@ const Profile = () => {
                     </div>
                 </section>
             </main>
-        </div>
+        </div >
     );
 };
 
-export default Profile;
+export default Perfil;

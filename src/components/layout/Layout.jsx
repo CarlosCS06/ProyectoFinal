@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from './Navbar';
-import Notification from '../common/Notification';
+import Notificacion from '../notificacion/Notificacion';
 import '../../styles/Layout.css';
 import '../../styles/Notification.css';
 
@@ -8,7 +8,7 @@ const Layout = ({ children }) => {
     return (
         <div className="app-shell">
             <Navbar />
-            <Notification />
+            <Notificacion />
             <motion.main
                 className="app-main"
                 initial={{ opacity: 0, y: 20 }}
@@ -30,13 +30,11 @@ const Layout = ({ children }) => {
                     <div className="footer-links">
                         <h4>Navegación</h4>
                         <a href="/explore">Explorar</a>
-                        <a href="/backlog">Mi Colección</a>
+                        <a href="/coleccion">Mi Colección</a>
+                        <a href="/rankings">Los Mejores</a>
+                        <a href="/releases">Próximos</a>
                     </div>
-                    <div className="footer-social">
-                        <h4>Comunidad</h4>
-                        <a href="#">Discord</a>
-                        <a href="#">Twitter</a>
-                    </div>
+
                 </div>
                 <div className="footer-bottom container">
                     <p>&copy; {new Date().getFullYear()} InfoGamer. Creado para jugadores épicos.</p>
