@@ -1,35 +1,6 @@
 
-// URL de la base de datos local
-const URL_DB_LOCAL = 'http://localhost:3001';
-
-// Helper para obtener datos del json-server local
-const fetchLocal = async (endpoint, params = '') => {
-    try {
-        const url = `${URL_DB_LOCAL}${endpoint}${params ? '?' + params : ''}`;
-        const respuesta = await fetch(url);
-        if (!respuesta.ok) {
-            throw new Error(`Error al obtener desde ${url}`);
-        }
-        let datos = await respuesta.json();
-
-        // Manejar el objeto de paginación de json-server v1 (se extrae la propiedad data)
-        if (!Array.isArray(datos) && datos.data && Array.isArray(datos.data)) {
-            datos = datos.data;
-        }
-
-        // IDs transformados en números para mantener consistencia
-        if (Array.isArray(datos)) {
-            return datos.map(item => ({ ...item, id: Number(item.id) }));
-        } else if (datos && datos.id && !isNaN(datos.id)) {
-            return { ...datos, id: Number(datos.id) };
-        }
-
-        return datos;
-    } catch (error) {
-        console.error('Error al obtener datos locales:', error);
-        return [];
-    }
-};
+// Importar datos locales
+import { gamesData } from '../data/gamesData.js';
 
 // Funciones auxiliares
 export const formatearImagenIGDB = (url, tamano = 't_cover_big') => {
@@ -62,27 +33,31 @@ export const getYoutubeUrl = obtenerUrlYoutube;
 export const igdbService = {
     // --- MÉTODOS DE DATOS LOCALES ---
 
-    // Obtener juegos paginados desde json-server
+    // Obtener juegos paginados
     obtenerTodosLosJuegos: async (pagina = 1, porPagina = 50) => {
-        return await fetchLocal('/games', `_page=${pagina}&_per_page=${porPagina}`);
+        const inicio = (pagina - 1) * porPagina;
+        const fin = inicio + porPagina;
+        return gamesData.slice(inicio, fin).map(g => ({ ...g, id: String(g.id) }));
     },
 
-    // Obtener todos los juegos sin paginación (para filtrado/búsqueda)
+    // Obtener todos los juegos sin paginación
     _obtenerTodosLosJuegosRaw: async () => {
-        return await fetchLocal('/games');
+        return gamesData.map(g => ({ ...g, id: String(g.id) }));
     },
 
     obtenerJuegosTendencia: async (limite = 20) => {
-        const datos = await fetchLocal('/games', `_sort=-valoracion&valoracion_gte=1&_per_page=${limite}&_page=1`);
-        return datos.sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0));
+        const datos = [...gamesData].sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0));
+        return datos.slice(0, limite).map(g => ({ ...g, id: String(g.id) }));
     },
 
     obtenerProximosLanzamientos: async (limite = 50) => {
-        const datos = await fetchLocal('/games');
         const ahoraUnix = Math.floor(Date.now() / 1000);
-        const proximos = datos.filter(j => j.fecha_lanzamiento && j.fecha_lanzamiento > ahoraUnix);
-        proximos.sort((a, b) => a.fecha_lanzamiento - b.fecha_lanzamiento);
-        return limite ? proximos.slice(0, limite) : proximos;
+        const proximos = gamesData
+            .filter(j => j.fecha_lanzamiento && j.fecha_lanzamiento > ahoraUnix)
+            .sort((a, b) => a.fecha_lanzamiento - b.fecha_lanzamiento)
+            .slice(0, limite)
+            .map(g => ({ ...g, id: String(g.id) }));
+        return proximos;
     },
 
     obtenerProximos: async (limite = 50) => {
@@ -90,7 +65,7 @@ export const igdbService = {
     },
 
     buscarJuegos: async (cadenaBusqueda, filtros = {}) => {
-        let datos = await igdbService._obtenerTodosLosJuegosRaw();
+        let datos = [...gamesData];
 
         // 1. Filtrar por búsqueda (Nombre)
         if (cadenaBusqueda) {
@@ -100,16 +75,17 @@ export const igdbService = {
             );
         }
 
-        // 2. Aplicar otros filtros (Género, Plataforma)
+        // 2. Aplicar otros filtros (Género)
         if (filtros.genre) {
             datos = datos.filter(juego =>
-                juego.generos && juego.generos.some(g => g.id === parseInt(filtros.genre))
+                juego.generos && juego.generos.some(g => g === filtros.genre || g.nombre === filtros.genre)
             );
         }
 
+        // 2. Aplicar otros filtros (Plataforma)
         if (filtros.platform) {
             datos = datos.filter(juego =>
-                juego.plataformas && juego.plataformas.some(p => p.id === parseInt(filtros.platform))
+                juego.plataformas && juego.plataformas.some(p => p === filtros.platform || p.nombre === filtros.platform)
             );
         }
 
@@ -123,7 +99,7 @@ export const igdbService = {
             datos.sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0));
         }
 
-        return datos;
+        return datos.map(g => ({ ...g, id: String(g.id) }));
     },
 
     descubrirJuegos: async (filtros = {}) => {
@@ -131,16 +107,16 @@ export const igdbService = {
     },
 
     obtenerDetallesJuego: async (id) => {
-        const datos = await fetchLocal(`/games/${id}`);
-        if (datos && datos.id) {
-            return datos;
-        }
-        return null;
+        const juego = gamesData.find(g => String(g.id) === String(id));
+        return juego ? { ...juego, id: String(juego.id) } : null;
     },
 
     obtenerMejoresRankings: async (limite = 50) => {
-        const datos = await fetchLocal('/games', `_sort=-valoracion&valoracion_gte=1&_per_page=${limite}&_page=1`);
-        return datos.sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0));
+        const datos = [...gamesData]
+            .filter(g => g.valoracion >= 1)
+            .sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0))
+            .slice(0, limite);
+        return datos.map(g => ({ ...g, id: String(g.id) }));
     },
 
     obtenerMejoresValorados: async (limite = 50) => {
@@ -149,33 +125,41 @@ export const igdbService = {
 
     obtenerJuegosPorId: async (ids) => {
         if (!ids || ids.length === 0) return [];
-        const consulta = ids.map(id => `id=${id}`).join('&');
-        return await fetchLocal('/games', consulta);
+        return gamesData
+            .filter(g => ids.includes(String(g.id)) || ids.includes(g.id))
+            .map(g => ({ ...g, id: String(g.id) }));
     },
 
     // --- REVIEWS & USERS ---
     obtenerReseñas: async (idJuego) => {
-        return await fetchLocal('/reviews', `gameId=${idJuego}`);
+        // Por ahora retornar array vacío (sin backend de reviews)
+        return [];
     },
 
     agregarReseña: async (reseña) => {
-        try {
-            const respuesta = await fetch(`${URL_DB_LOCAL}/reviews`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(reseña)
-            });
-            return await respuesta.json();
-        } catch (e) { return null; }
+        // Sin backend de reviews en Vercel
+        return null;
     },
 
     // --- GENRES & PLATFORMS ---
     obtenerGeneros: async () => {
-        return await fetchLocal('/generos');
+        const generos = new Set();
+        gamesData.forEach(g => {
+            if (g.generos && Array.isArray(g.generos)) {
+                g.generos.forEach(genero => generos.add(genero));
+            }
+        });
+        return Array.from(generos).map((g, i) => ({ id: i, nombre: g }));
     },
 
     obtenerPlataformas: async () => {
-        return await fetchLocal('/plataformas');
+        const plataformas = new Set();
+        gamesData.forEach(g => {
+            if (g.plataformas && Array.isArray(g.plataformas)) {
+                g.plataformas.forEach(plat => plataformas.add(plat));
+            }
+        });
+        return Array.from(plataformas).map((p, i) => ({ id: i, nombre: p }));
     },
 
     // Aliases para compatibilidad
